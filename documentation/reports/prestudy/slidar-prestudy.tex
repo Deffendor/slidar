@@ -12,12 +12,12 @@ Construction of the Slidarr}
 \maketitle
 
 \section{Introduction}
-\paragraph{}The idea is to create a new revolutionary musical instrument called Slidarr. It originated from using the guitar instrument but instread of pulling the strings, the fingers will slide on the strings without the strings making any sound. The sound will come from the relative location of the fingers on the strings which will be determined by the electronic equipment developed in this project.
+\paragraph{}The idea is to create a new revolutionary music instrument called Slidarr. It originated from the guitar instrument but instread of using it the regular way of pulling the strings, the fingers will slide on the strings without the strings making any sound. The sound will come from the relative location of the fingers on the strings which will be determined by the electronic equipment developed in this project.
 
 \paragraph{}Since the construction of the actual instrument is very simple, just some strings and wires, it can be built in many different ways. For example, it can be attached to a steel-stringed guitar but also built as a one-stringed guitar or like a violin with a conductive bow.
 
 \section{Objectives}
-\paragraph{}On a guitar, there are usually six strings, but this instrument only needs one or two strings to operate. In addition to that, the project will be started using optimal conditions for the strings and the conductor on the hand. This means using a very good conductor on the finger to bridge the strings so that the biggest resistance is the length of the wires. If this works, the next move would be to use bare hands with possibly other strings that have similar resistance. Once the MIDI data is created from the ADC there are several options what to do with it e.g. send it to a computer/synthesizer via USB, wirelessly or synthesize the signal on chip...
+\paragraph{}On a guitar, there are usually six strings, but this instrument only needs one or two strings to operate. In addition to that, the project will be started using optimal conditions for the strings and the conductor on the hand. This means using a very good conductor on the finger to bridge the strings so that the biggest resistance is the length of the wires. If this works, the next move would be to use bare hands with possibly other strings that have a similar resistance. Once the MIDI data is created from the ADC there are several options what to do with it e.g. sending it to a computer to synthesize via USB, wirelessly or synthesize the signal on chip.
 
 \begin{figure}[h]
   \centering
@@ -60,17 +60,18 @@ Construction of the Slidarr}
     \item Circuit consists of resistors, capacitors, transistors, strings, screws, buffer amplifier, breadboard and jumper wires.  
     \item Microcontroller TM4C123G – ADC (Dual 12-bit 2MSPS ADCs)
     \item Speaker, Buttons and LEDs (maybe we add potentiometer and LCD)
-    \item SPI Communication between MCU and PC (maybe transmitter signal by WiFi module)
+    \item Serial Communication between MCU and PC (maybe transmitter signal by WiFi module)
 \end{itemize}
 
 %\section{Method}
 
 \section{Challenge}
-\paragraph{}To get a proper measurement so that notes can be created from it and beautiful music is created.
+
 \paragraph{}The possible challenges:
 \begin{itemize}
+    \item Building the circuit that gives a proper signal.
     \item Making accurate ADC readings from the strings.
-    \item Setup the communicate using the MIDI protocol.
+    \item Setup the communication using the MIDI protocol.
     \item Noise in case the strings are not connected with each other.
 \end{itemize}
 \end{document}
