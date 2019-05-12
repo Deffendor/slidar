@@ -1,10 +1,12 @@
 #include <stdint.h>
 #include <tm4c123gh6pm.h>
 
-
 void delayMs(int n);
 void UART4Tx(char c);
 char UART4Rx(void);
+void noteOn(int note, int velocity);
+void noteOff(int note, int velocity);
+void pitchbend(int value);
 
 /**
  * main.c
@@ -45,8 +47,8 @@ int main(void)
     // -> 104.1666666
     // UARTIBRD = 104
     // UARTFBRD = 0.166666 x 64 + 0.5 (0.5 is to round) -> 11
-    UART4_IBRD_R = 8;
-    UART4_FBRD_R = 44;
+    UART4_IBRD_R = 104; //8 for 115200
+    UART4_FBRD_R = 11;  //44 for 115200
 
     UART4_CC_R = 0; // Select UART4 clock source (internal in this case)
     UART4_LCRH_R = 96; //or 0x60 / 1 stop bit, no FIFO, no parity, 8 bit data
@@ -72,8 +74,12 @@ int main(void)
         // send raw upper 8 bits via uart
         result = result >> 4; // looses the lower 4 bit, just to make it fit to 8 byte for now
         c = result;
-        UART4Tx(c);
+        //UART4Tx(c);
 
+        noteOn(0x40, 0x40);
+        delayMs(1000);
+
+        noteOff(0x40, 0x40);
         delayMs(1000);
     }
 
@@ -101,6 +107,41 @@ void delayMs(int n){
         for(j = 0; j < 3180; j++)
             {}
 }
+
+void noteOn(int note, int velocity){
+    char command = 0x90;
+    char parameterKey = (char)note;
+    char parameterVelocity = (char)velocity;
+    UART4Tx(command);
+    UART4Tx(parameterKey);
+    UART4Tx(parameterVelocity);
+}
+
+void noteOff(int note, int velocity){
+    char command = 0x80;
+    char parameterKey = (char)note;
+    char parameterVelocity = (char)velocity;
+    UART4Tx(command);
+    UART4Tx(parameterKey);
+    UART4Tx(parameterVelocity);
+}
+
+void pitchbend(int value){
+    char command = 0xE0;
+    int lsbValue = value & 0x7F;
+    int msbValue = value & 0x3F80;
+    msbValue = msbValue >> 7;
+    char parameterLsb = (char)lsbValue;
+    char parameterMsb = (char)msbValue;
+    UART4Tx(command);
+    UART4Tx(parameterLsb);
+    UART4Tx(parameterMsb);
+}
+
+
+
+
+
 
 
 
