@@ -29,11 +29,16 @@ int main(void)
     float current_freq;
 
     float base_freq = DEFAULT_BASE_FREQUENCY;
+    float prev_base_freq;
+    float touchdown_freq;
+
     int current_note;
     int touchdown_val;
     int pitchbend_offset;
 
     enum state_t state = IDLE;
+
+    int btn1 = 0, btn2 = 0;
 
     initButtons();
     initADC();
@@ -42,6 +47,9 @@ int main(void)
     while(1){
         readADC(&current_val);
         current_freq = calcFreq(base_freq, base_val, octave_span, current_val);
+
+        btn1 = readButton(0); // TODO read and debounce buttons
+        btn2 = readButton(1);
 
         switch (state) {
             case IDLE:
@@ -52,6 +60,7 @@ int main(void)
                     // String has been touched: Turn the note on.
                     current_note = freqToNote(current_freq);
                     touchdown_val = current_val; // store current val (for pitchbending)
+                    touchdown_freq = current_freq;
 
                     noteOn(current_note, 127);
                     state = SLIDE;
@@ -78,12 +87,11 @@ int main(void)
                 }
                 */
 
-                /* TODO implement scrolling
                 if (btn2) {
                     // SW2 pressed: Scroll the frequency
-                    state = SCOLL;
+                    prev_base_freq = base_freq;
+                    state = SCROLL;
                 }
-                 */
 
                 break;
 
@@ -100,7 +108,12 @@ int main(void)
                 break;
 
             case SCROLL:
-                // TODO implement scrolling
+                // Move the base frequency by sliding and holding button 2
+                base_freq = prev_base_freq + current_freq - touchdown_freq;
+
+                if (!btn2)
+                    state = IDLE;
+
                 break;
         }
 
