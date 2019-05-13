@@ -28,6 +28,8 @@ int main(void)
 
     float base_freq = DEFAULT_BASE_FREQUENCY;
     int current_note;
+    int touchdown_val;
+    int pitchbend_offset;
 
     enum state_t state = IDLE;
 
@@ -43,28 +45,38 @@ int main(void)
             case IDLE:
                 // String is not touched: Nothing happens.
 
-                if (current_val > TOUCH_THRESHOLD) {
+                if (current_val > TOUCH_THRESHOLD) { // TODO implement better detection of touch (filter current_val and measure over time)
+
                     // String has been touched: Turn the note on.
-                    noteOn(0x40, 0x40);
+                    current_note = freqToNote(current_freq);
+                    touchdown_val = current_val; // store current val (for pitchbending)
+
+                    noteOn(current_note, 127);
                     state = SLIDE;
                 }
                 break;
             case SLIDE:
                 // String is being touched: Bend the pitch.
+
+                // Calculate amount of bending
+                bend_offset = (touchdown_val - current_val)/(float) octave_span * PITCHBEND_RESOLUTION;
+
+                pitchbend(bend_offset);
+
                 if (current_val < TOUCH_THRESHOLD) {
                     // String has been released: Turn the note off.
-                    noteOff(0x40, 0x40);
+                    noteOff(current_note, 127);
                     state = IDLE;
                 }
 
-                /*
+                /* TODO implement calibration
                 if (btn1) {
                     // SW1 pressed: Enter calibration mode
                     state = CALIBRATE_BASE;
                 }
                 */
 
-                /*
+                /* TODO implement scrolling
                 if (btn2) {
                     // SW2 pressed: Scroll the frequency
                     state = SCOLL;
@@ -74,6 +86,7 @@ int main(void)
                 break;
 
             case CALIBRATE_BASE:
+                // TODO implement calibration
                 /*
                  if (btn1)
                     state = CALIBRATE_OCTAVE;
@@ -81,17 +94,13 @@ int main(void)
                 break;
 
             case CALIBRATE_OCTAVE:
+                // TODO implement calibration
                 break;
 
             case SCROLL:
+                // TODO implement scrolling
                 break;
         }
-
-        /*noteOn(0x40, 0x40);
-        delayMs(1000);
-
-        noteOff(0x40, 0x40);
-        delayMs(1000);*/
     }
 }
 
