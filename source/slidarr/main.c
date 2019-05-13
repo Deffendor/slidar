@@ -38,7 +38,7 @@ int main(void)
 
     enum state_t state = IDLE;
 
-    int btn1 = 0, btn2 = 0;
+    int btn1, btn2, btn1_prev, btn2_prev;
 
     initButtons();
     initADC();
@@ -48,6 +48,11 @@ int main(void)
         readADC(&current_val);
         current_freq = calcFreq(base_freq, base_val, octave_span, current_val);
 
+        // Store previous button states
+        btn1_prev = btn1;
+        btn2_prev = btn2;
+
+        // Read button states
         btn1 = readButton(0); // TODO read and debounce buttons
         btn2 = readButton(1);
 
@@ -80,15 +85,17 @@ int main(void)
                     state = IDLE;
                 }
 
-                /* TODO implement calibration
                 if (btn1) {
                     // SW1 pressed: Enter calibration mode
+                    noteOff(current_note, 127);
+
                     state = CALIBRATE_BASE;
                 }
-                */
 
                 if (btn2) {
                     // SW2 pressed: Scroll the frequency
+                    noteOff(current_note, 127);
+
                     prev_base_freq = base_freq;
                     state = SCROLL;
                 }
@@ -96,15 +103,22 @@ int main(void)
                 break;
 
             case CALIBRATE_BASE:
-                // TODO implement calibration
-                /*
-                 if (btn1)
+                // Set current_val from current reading
+                base_val = current_val;
+
+                if (!btn1_prev && btn1)
                     state = CALIBRATE_OCTAVE;
-                */
+
                 break;
 
             case CALIBRATE_OCTAVE:
-                // TODO implement calibration
+                // Set octave span from current reading
+
+                octave_span = current_val - base_val;
+
+                if (!btn1_prev && btn1)
+                    state = IDLE;
+
                 break;
 
             case SCROLL:
