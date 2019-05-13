@@ -24,6 +24,7 @@ int main(void)
     int base_val;
     int octave_span;
     volatile int current_val; // ADC result
+    float current_freq;
 
     float base_freq = DEFAULT_BASE_FREQUENCY;
     int current_note;
@@ -36,6 +37,7 @@ int main(void)
 
     while(1){
         read_ADC(&current_val);
+        current_freq = calcFreq(base_freq, base_val, octave_span, current_val);
 
         switch (state) {
             case IDLE:
@@ -43,6 +45,7 @@ int main(void)
 
                 if (current_val > TOUCH_THRESHOLD) {
                     // String has been touched: Turn the note on.
+                    noteOn(0x40, 0x40);
                     state = SLIDE;
                 }
                 break;
@@ -50,6 +53,7 @@ int main(void)
                 // String is being touched: Bend the pitch.
                 if (current_val < TOUCH_THRESHOLD) {
                     // String has been released: Turn the note off.
+                    noteOff(0x40, 0x40);
                     state = IDLE;
                 }
 
@@ -89,7 +93,6 @@ int main(void)
         noteOff(0x40, 0x40);
         delayMs(1000);*/
     }
-
 }
 
 

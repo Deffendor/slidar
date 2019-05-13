@@ -6,6 +6,8 @@
  */
 #include "midi.h"
 
+#include <math.h>
+
 void noteOn(int note, int velocity){
     char command = 0x90;
     char parameterKey = (char)note;
@@ -36,3 +38,6 @@ void pitchbend(int value){
     UART4Tx(parameterMsb);
 }
 
+int freqToNote(float freq) {
+    return log(freq/440.0)/log(2) * 12 + 69;
+}
