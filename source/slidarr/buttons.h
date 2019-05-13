@@ -8,7 +8,7 @@
 #ifndef BUTTONS_H_
 #define BUTTONS_H_
 
-void init_buttons();
-int read_button(int button);
+void initButtons();
+int readButton(int button);
 
 #endif /* BUTTONS_H_ */

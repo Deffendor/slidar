@@ -6,6 +6,8 @@
 #include "utils.h"
 #include "adc.h"
 #include "buttons.h"
+#include "slidarr.h"
+#include "uart.h"
 
 
 enum state_t {
@@ -33,12 +35,12 @@ int main(void)
 
     enum state_t state = IDLE;
 
-    init_buttons();
-    init_ADC();
-    init_UART();
+    initButtons();
+    initADC();
+    initUART();
 
     while(1){
-        read_ADC(&current_val);
+        readADC(&current_val);
         current_freq = calcFreq(base_freq, base_val, octave_span, current_val);
 
         switch (state) {
@@ -59,9 +61,9 @@ int main(void)
                 // String is being touched: Bend the pitch.
 
                 // Calculate amount of bending
-                bend_offset = (touchdown_val - current_val)/(float) octave_span * PITCHBEND_RESOLUTION;
+                pitchbend_offset = (touchdown_val - current_val)/(float) octave_span * PITCHBEND_RESOLUTION;
 
-                pitchbend(bend_offset);
+                pitchbend(pitchbend_offset);
 
                 if (current_val < TOUCH_THRESHOLD) {
                     // String has been released: Turn the note off.

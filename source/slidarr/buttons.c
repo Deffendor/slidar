@@ -5,11 +5,11 @@
  *      Author: mats
  */
 
-void init_buttons() {
+void initButtons() {
     // TODO init buttons
 }
 
-int read_button(int button) {
+int readButton(int button) {
     // TODO read onboard switches
    return 0;
 }

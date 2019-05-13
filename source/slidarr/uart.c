@@ -9,7 +9,7 @@
 #include <tm4c123gh6pm.h>
 #include <stdint.h>
 
-void init_UART() {
+void initUART() {
 
     /////////////////////// Setup UART4 //////////////////////////////////
     SYSCTL_RCGCUART_R |= SYSCTL_RCGCUART_R4; // UART4 clock

@@ -8,7 +8,7 @@
 #ifndef UART_H_
 #define UART_H_
 
-void init_UART();
+void initUART();
 void UART4Tx(char c);
 char UART4Rx(void);
 

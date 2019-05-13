@@ -9,7 +9,7 @@
 
 #include "adc.h"
 
-void init_ADC() { // TODO make generic for other ports
+void initADC() { // TODO make generic for other ports
     /////////////////////// Setup ADC0 (AIN0) at pin PE3  //////////////////
     //SYSCTL->RCGCGPIO |= 0x10;
     // TODO: add comments and use better names, also for the ADC stuff a in the endless main while loop
@@ -28,7 +28,7 @@ void init_ADC() { // TODO make generic for other ports
     /////////////////////// Setup ADC done ///////////////////////////////
 }
 
-void read_ADC(volatile int *val) { // TODO make generic for other ports
+void readADC(volatile int *val) { // TODO make generic for other ports
     int current_val;
 
     // read adc
