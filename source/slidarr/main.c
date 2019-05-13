@@ -103,6 +103,8 @@ int main(void)
                 // TODO implement scrolling
                 break;
         }
+
+        delayMs(5);
     }
 }
 
