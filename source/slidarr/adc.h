@@ -9,6 +9,6 @@
 #define ADC_H_
 
 void init_ADC();
-int read_ADC();
+void read_ADC(volatile int *val);
 
 #endif /* ADC_H_ */

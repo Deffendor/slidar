@@ -28,15 +28,14 @@ void init_ADC() { // TODO make generic for other ports
     /////////////////////// Setup ADC done ///////////////////////////////
 }
 
-int read_ADC() { // TODO make generic for other ports
+void read_ADC(volatile int *val) { // TODO make generic for other ports
     int current_val;
+
     // read adc
     ADC0_PSSI_R |= 8;
     while((ADC0_RIS_R & 8) == 0);
-    current_val = ADC0_SSFIFO3_R;
+    *val = ADC0_SSFIFO3_R;
     ADC0_ISC_R = 8;
-
-    return current_val;
 }
 
 

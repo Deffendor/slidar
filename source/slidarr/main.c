@@ -35,6 +35,7 @@ int main(void)
     init_UART();
 
     while(1){
+        read_ADC(&current_val);
 
         switch (state) {
             case IDLE:
