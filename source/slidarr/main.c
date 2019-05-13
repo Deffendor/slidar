@@ -23,10 +23,15 @@ enum state_t {
  */
 int main(void)
 {
-    int base_val;
-    int octave_span;
-    volatile int current_val; // ADC result
+    int string_base;
+    int string_octave_span;
+    volatile int string_current; // ADC result
     float current_freq;
+
+    int string_history[STRING_HISTORY_SIZE];
+    int string_history_index;
+    float string_mean;
+    float string_stddev;
 
     float base_freq = DEFAULT_BASE_FREQUENCY;
     float prev_base_freq;
@@ -43,10 +48,16 @@ int main(void)
     initButtons();
     initADC();
     initUART();
+    initHistory(string_history, STRING_HISTORY_SIZE);
 
     while(1){
-        readADC(&current_val);
-        current_freq = calcFreq(base_freq, base_val, octave_span, current_val);
+        readADC(&string_current);
+
+        logVal(string_history, STRING_HISTORY_SIZE, &string_history_index, string_current);
+        string_mean = getMean(string_history, STRING_HISTORY_SIZE);
+        string_stddev = getStdDev(string_history, STRING_HISTORY_SIZE);
+
+        current_freq = calcFreq(base_freq, string_base, string_octave_span, string_current);
 
         // Store previous button states
         btn1_prev = btn1;
@@ -60,11 +71,11 @@ int main(void)
             case IDLE:
                 // String is not touched: Nothing happens.
 
-                if (current_val > TOUCH_THRESHOLD) { // TODO implement better detection of touch (filter current_val and measure over time)
+                if (string_mean > STRING_THRESHOLD && string_stddev < STRING_IDLE_STDDEV) { // TODO implement better detection of touch (filter string_current and measure over time)
 
                     // String has been touched: Turn the note on.
                     current_note = freqToNote(current_freq);
-                    touchdown_val = current_val; // store current val (for pitchbending)
+                    touchdown_val = string_current; // store current val (for pitchbending)
                     touchdown_freq = current_freq;
 
                     noteOn(current_note, 127);
@@ -75,11 +86,11 @@ int main(void)
                 // String is being touched: Bend the pitch.
 
                 // Calculate amount of bending
-                pitchbend_offset = (touchdown_val - current_val)/(float) octave_span * PITCHBEND_RESOLUTION;
+                pitchbend_offset = (touchdown_val - string_mean/(float) string_octave_span * PITCHBEND_RESOLUTION;
 
                 pitchbend(pitchbend_offset);
 
-                if (current_val < TOUCH_THRESHOLD) {
+                if (string_mean < STRING_THRESHOLD && string_stddev < STRING_IDLE_STDDEV) {
                     // String has been released: Turn the note off.
                     noteOff(current_note, 127);
                     state = IDLE;
@@ -103,8 +114,8 @@ int main(void)
                 break;
 
             case CALIBRATE_BASE:
-                // Set current_val from current reading
-                base_val = current_val;
+                // Set string_current from current reading
+                string_base = string_mean;
 
                 if (!btn1_prev && btn1)
                     state = CALIBRATE_OCTAVE;
@@ -114,7 +125,7 @@ int main(void)
             case CALIBRATE_OCTAVE:
                 // Set octave span from current reading
 
-                octave_span = current_val - base_val;
+                string_octave_span = string_mean - string_base;
 
                 if (!btn1_prev && btn1)
                     state = IDLE;
@@ -131,7 +142,7 @@ int main(void)
                 break;
         }
 
-        delayMs(5);
+        delayMs(STRING_SAMPLING_DELAY);
     }
 }
 

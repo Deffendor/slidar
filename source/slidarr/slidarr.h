@@ -10,4 +10,9 @@
 
 float calcFreq(float base_freq, int base_val, int octave_span, int current_val);
 
+void initHistory(int *history, int max_items);
+void logVal(int *history, int max_items, int *index, int newVal);
+float getStdDev(int *arr, int max_items);
+float getMean(int *arr, int max_items);
+
 #endif /* SLIDARR_H_ */
