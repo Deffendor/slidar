@@ -14,6 +14,7 @@ void pitchbend(int value);
 int main(void)
 {
     volatile int result; // ADC result
+    volatile int result2;
     char c; // character to send via UART
 
     /////////////////////// Setup ADC0 (AIN0) at pin PE3  //////////////////
@@ -31,6 +32,23 @@ int main(void)
     ADC0_SSMUX3_R  = 0;
     ADC0_SSCTL3_R |= 6;
     ADC0_ACTSS_R |= 8;
+    /////////////////////// Setup ADC done ///////////////////////////////
+
+    /////////////////////// Setup ADC0 (AIN0) at pin PE3  //////////////////
+    //SYSCTL->RCGCGPIO |= 0x10;
+    // TODO: add comments and use better names, also for the ADC stuff a in the endless main while loop
+    SYSCTL_RCGCGPIO_R |= 0x10;
+    SYSCTL_RCGCADC_R |= 2;
+
+    GPIO_PORTE_AFSEL_R |= 4;
+    GPIO_PORTE_DEN_R &= ~4;
+    GPIO_PORTE_AMSEL_R |= 4;
+
+    ADC1_ACTSS_R &= ~8;
+    ADC1_EMUX_R &= ~0xF000;
+    ADC1_SSMUX3_R  = 1;
+    ADC1_SSCTL3_R |= 6;
+    ADC1_ACTSS_R |= 8;
     /////////////////////// Setup ADC done ///////////////////////////////
 
 
@@ -65,11 +83,17 @@ int main(void)
 
 
     while(1){
-        // read adc
+        // read adc 0
         ADC0_PSSI_R |= 8;
         while((ADC0_RIS_R & 8) == 0);
         result = ADC0_SSFIFO3_R;
         ADC0_ISC_R = 8;
+
+        // read adc 1
+        ADC1_PSSI_R |= 8;
+        while((ADC1_RIS_R & 8) == 0);
+        result2 = ADC1_SSFIFO3_R;
+        ADC1_ISC_R = 8;
 
         // send raw upper 8 bits via uart
         result = result >> 4; // looses the lower 4 bit, just to make it fit to 8 byte for now
@@ -77,10 +101,10 @@ int main(void)
         //UART4Tx(c);
 
         noteOn(0x40, 0x40);
-        delayMs(1000);
+        //delayMs(1000);
 
         noteOff(0x40, 0x40);
-        delayMs(1000);
+        //delayMs(1000);
     }
 
 	//return 0;
