@@ -23,7 +23,7 @@ enum state_t {
  */
 int main(void)
 {
-    int string_base;
+    int string_base = DEFAULT_STRING_BASE;
     int string_octave_span = DEFAULT_STRING_OCTAVE_SPAN;
     volatile int string_current; // ADC result
     float current_freq;
@@ -41,7 +41,7 @@ int main(void)
     int touchdown_val;
     int pitchbend_offset;
 
-    int string_touched, string_untouched = 0;
+    int string_touched, string_untouched = 0, string_moving = 0;
 
     enum state_t state = IDLE;
 
@@ -70,14 +70,15 @@ int main(void)
         btn2 = readButton(1);
 
         // Boolean to check if string is being touched
-        string_touched = string_mean > STRING_THRESHOLD && string_stddev < STRING_IDLE_STDDEV;
-        string_untouched = string_mean < STRING_THRESHOLD && string_stddev < STRING_IDLE_STDDEV;
+        string_touched = string_mean > STRING_THRESHOLD;
+        string_untouched = string_mean < STRING_THRESHOLD;
+        string_moving = string_stddev < STRING_IDLE_STDDEV;
 
         switch (state) {
             case IDLE:
                 // String is not touched: Nothing happens.
 
-                if (string_touched) { // TODO implement better detection of touch (filter string_current and measure over time)
+                if (string_touched && !string_moving) { // TODO implement better detection of touch (filter string_current and measure over time)
 
                     // String has been touched: Turn the note on.
                     current_note = freqToNote(current_freq);
@@ -87,14 +88,6 @@ int main(void)
                     noteOn(current_note, 127);
                     state = SLIDE;
                 }
-
-                if (btn1) {
-                    // SW1 pressed: Enter calibration mode
-                    noteOff(current_note, 127);
-
-                    state = CALIBRATE_BASE;
-                }
-
 
                 break;
             case SLIDE:
@@ -148,6 +141,14 @@ int main(void)
                     state = IDLE;
 
                 break;
+        }
+
+
+        if (btn1 && state != CALIBRATE_BASE && state != CALIBRATE_OCTAVE) {
+            // SW1 pressed: Enter calibration mode
+            noteOff(current_note, 127);
+
+            state = CALIBRATE_BASE;
         }
 
         delayMs(STRING_SAMPLING_DELAY);

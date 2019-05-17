@@ -9,8 +9,9 @@
 #define DEFAULTS_H_
 
 #define STRING_THRESHOLD 2000 // TODO find a good value
-#define STRING_IDLE_STDDEV 20 // TODO find a good value
+#define STRING_IDLE_STDDEV 100 // TODO find a good value
 #define DEFAULT_STRING_OCTAVE_SPAN 500
+#define DEFAULT_STRING_BASE 3000
 #define DEFAULT_BASE_FREQUENCY 261.63
 #define PITCHBEND_RESOLUTION 8192
 
