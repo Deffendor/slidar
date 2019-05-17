@@ -11,9 +11,8 @@
 
 void initButtons() {
     /*RCGCGPIO PORTF 0x20, PORTD 0x08               */
-    volatile uint32_t dummy = 0;
     SYSCTL_RCGCGPIO_R |= 0x28;      //F & D: activate clock for Both 0x28
-    dummy += 1;
+
     /*unlock and confirm is important at the begging*/
     GPIO_PORTF_LOCK_R = 0x4C4F434B; //F: unlock
     GPIO_PORTF_CR_R = 0x1F;         //F: confirm
