@@ -24,12 +24,12 @@ enum state_t {
 int main(void)
 {
     int string_base;
-    int string_octave_span;
+    int string_octave_span = DEFAULT_STRING_OCTAVE_SPAN;
     volatile int string_current; // ADC result
     float current_freq;
 
     int string_history[STRING_HISTORY_SIZE];
-    int string_history_index;
+    int string_history_index = 0;
     float string_mean;
     float string_stddev;
 
@@ -41,9 +41,11 @@ int main(void)
     int touchdown_val;
     int pitchbend_offset;
 
+    int string_touched, string_untouched = 0;
+
     enum state_t state = IDLE;
 
-    int btn1, btn2, btn1_prev, btn2_prev;
+    int btn1, btn2, btn1_prev = 0, btn2_prev = 0;
 
     initButtons();
     initADC();
@@ -67,11 +69,15 @@ int main(void)
         btn1 = readButton(0); // TODO read and debounce buttons
         btn2 = readButton(1);
 
+        // Boolean to check if string is being touched
+        string_touched = string_mean > STRING_THRESHOLD && string_stddev < STRING_IDLE_STDDEV;
+        string_untouched = string_mean < STRING_THRESHOLD && string_stddev < STRING_IDLE_STDDEV;
+
         switch (state) {
             case IDLE:
                 // String is not touched: Nothing happens.
 
-                if (string_mean > STRING_THRESHOLD && string_stddev < STRING_IDLE_STDDEV) { // TODO implement better detection of touch (filter string_current and measure over time)
+                if (string_touched) { // TODO implement better detection of touch (filter string_current and measure over time)
 
                     // String has been touched: Turn the note on.
                     current_note = freqToNote(current_freq);
@@ -81,6 +87,15 @@ int main(void)
                     noteOn(current_note, 127);
                     state = SLIDE;
                 }
+
+                if (btn1) {
+                    // SW1 pressed: Enter calibration mode
+                    noteOff(current_note, 127);
+
+                    state = CALIBRATE_BASE;
+                }
+
+
                 break;
             case SLIDE:
                 // String is being touched: Bend the pitch.
@@ -90,17 +105,10 @@ int main(void)
 
                 pitchbend(pitchbend_offset);
 
-                if (string_mean < STRING_THRESHOLD && string_stddev < STRING_IDLE_STDDEV) {
+                if (string_untouched) {
                     // String has been released: Turn the note off.
                     noteOff(current_note, 127);
                     state = IDLE;
-                }
-
-                if (btn1) {
-                    // SW1 pressed: Enter calibration mode
-                    noteOff(current_note, 127);
-
-                    state = CALIBRATE_BASE;
                 }
 
                 if (btn2) {
