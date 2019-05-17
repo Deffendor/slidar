@@ -34,7 +34,7 @@ void readADC(volatile int *val) { // TODO make generic for other ports
     // read adc
     ADC1_PSSI_R |= 8;
     while((ADC1_RIS_R & 8) == 0);
-    result2 = ADC1_SSFIFO3_R;
+    current_val = ADC1_SSFIFO3_R;
     ADC1_ISC_R = 8;
 }
 

@@ -86,7 +86,7 @@ int main(void)
                 // String is being touched: Bend the pitch.
 
                 // Calculate amount of bending
-                pitchbend_offset = (touchdown_val - string_mean/(float) string_octave_span * PITCHBEND_RESOLUTION;
+                pitchbend_offset = (touchdown_val - string_mean)/(float) string_octave_span * PITCHBEND_RESOLUTION;
 
                 pitchbend(pitchbend_offset);
 
