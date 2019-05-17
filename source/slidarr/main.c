@@ -23,6 +23,7 @@ enum state_t {
  */
 int main(void)
 {
+    int new =0;
     int base_val;
     int octave_span;
     volatile int current_val; // ADC result
@@ -135,6 +136,36 @@ int main(void)
     }
 }
 
+
+//Interrupt Status - Interrupt Service Routines (ISRs)
+void GPIOPortF_Handler(void)
+{
+    if (GPIO_PORTF_RIS_R & 0x10) //button 2 F4
+    {
+        // GPIO_PORTF_MIS_R = 0x10;
+        GPIO_PORTF_ICR_R = 0x10;    //edge-detect interrupt cleared by writing a '1'
+        //Here! executed code
+    }
+        if (GPIO_PORTF_RIS_R & 0x01) //button 1 F0
+    {
+        GPIO_PORTF_ICR_R = 0x01;    //edge-detect interrupt cleared by writing a '1'
+        //Here! executed code
+    }
+}
+
+void GPIOPortD_Handler(void)
+{
+    if (GPIO_PORTD_RIS_R & 0x04) //button 3 D2
+    {
+        GPIO_PORTD_ICR_R = 0x04;    //edge-detect interrupt cleared by writing a '1'
+        //Here! executed code
+    }
+    if (GPIO_PORTD_RIS_R & 0x08) //button 4 D3
+    {
+        GPIO_PORTD_ICR_R = 0x08;    //edge-detect interrupt cleared by writing a '1'
+        //Here! executed code
+    }
+}
 
 
 
