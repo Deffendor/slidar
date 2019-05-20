@@ -65,7 +65,7 @@ int main(void)
         string_mean = getMean(string_history, STRING_HISTORY_SIZE);
         string_stddev = getStdDev(string_history, STRING_HISTORY_SIZE);
 
-        current_freq = calcFreq(base_freq, string_base, string_octave_span, string_current);
+        current_freq = calcFreq(base_freq, string_base, string_octave_span, string_mean);
 
         // Store previous button states
         btn1_prev = btn1;
@@ -77,7 +77,7 @@ int main(void)
 
         // Boolean to check if string is being touched
         string_touched = string_mean > STRING_THRESHOLD;
-        string_moving = string_stddev < STRING_IDLE_STDDEV;
+        string_moving = string_stddev > STRING_IDLE_STDDEV;
 
         //UART4Tx((char) string_current >> 4);
 
@@ -102,7 +102,7 @@ int main(void)
                 // String is being touched: Bend the pitch.
 
                 // Calculate amount of bending
-                pitchbend_offset = (touchdown_val - string_mean)/(float) string_octave_span * PITCHBEND_RESOLUTION;
+                pitchbend_offset = (string_mean - touchdown_val)/(float) string_octave_span * PITCHBEND_RESOLUTION;
 
                 pitchbend(pitchbend_offset);
 

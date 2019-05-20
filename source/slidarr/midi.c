@@ -29,6 +29,12 @@ void noteOff(int note, int velocity){
 void pitchbend(int value){
     value += 8192; // Center value (8192 = no bend)
 
+    if (value > 16383)
+        value = 16383;
+
+    else if (value < 0)
+        value = 0;
+
     char command = 0xE0;
     int lsbValue = value & 0x7F;
     int msbValue = value & 0x3F80;
