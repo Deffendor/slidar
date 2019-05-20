@@ -1,3 +1,7 @@
+#define RED_LED    (*((volatile uint32_t *)(0x42000000 + (0x400253FC-0x40000000)*32 + 1*4)))   //GPIO_PIN_1
+#define GREEN_LED  (*((volatile uint32_t *)(0x42000000 + (0x400253FC-0x40000000)*32 + 3*4)))   //GPIO_PIN_2
+#define BLUE_LED (*((volatile uint32_t *)(0x42000000 + (0x400253FC-0x40000000)*32 + 2*4))) //GPIO_PIN_3
+
 #include <tm4c123gh6pm.h>
 #include <stdint.h>
 
@@ -6,6 +10,7 @@
 #include "utils.h"
 #include "adc.h"
 #include "buttons.h"
+#include "leds.h"
 #include "slidarr.h"
 #include "uart.h"
 
@@ -13,8 +18,7 @@
 enum state_t {
     IDLE,
     SLIDE,
-    CALIBRATE_BASE,
-    CALIBRATE_OCTAVE,
+    CALIBRATE,
     SCROLL
 };
 
@@ -46,8 +50,10 @@ int main(void)
     enum state_t state = IDLE;
 
     int btn1, btn2, btn1_prev = 0, btn2_prev = 0;
+    int new_octave_span;
 
     initButtons();
+    initLEDs();
     initADC();
     initUART();
     initHistory(string_history, STRING_HISTORY_SIZE);
@@ -71,8 +77,9 @@ int main(void)
 
         // Boolean to check if string is being touched
         string_touched = string_mean > STRING_THRESHOLD;
-        string_untouched = string_mean < STRING_THRESHOLD;
         string_moving = string_stddev < STRING_IDLE_STDDEV;
+
+        //UART4Tx((char) string_current >> 4);
 
         switch (state) {
             case IDLE:
@@ -87,6 +94,7 @@ int main(void)
 
                     noteOn(current_note, 127);
                     state = SLIDE;
+                    setLED(1, 1);
                 }
 
                 break;
@@ -98,9 +106,11 @@ int main(void)
 
                 pitchbend(pitchbend_offset);
 
-                if (string_untouched) {
+                if (!string_touched) {
                     // String has been released: Turn the note off.
                     noteOff(current_note, 127);
+                    setLED(1, 0);
+
                     state = IDLE;
                 }
 
@@ -114,22 +124,21 @@ int main(void)
 
                 break;
 
-            case CALIBRATE_BASE:
+            case CALIBRATE:
                 // Set string_current from current reading
-                string_base = string_mean;
+                if (string_mean < string_base)
+                    string_base = string_mean;
 
-                if (!btn1_prev && btn1)
-                    state = CALIBRATE_OCTAVE;
-
-                break;
-
-            case CALIBRATE_OCTAVE:
                 // Set octave span from current reading
+                new_octave_span = string_mean - string_base;
 
-                string_octave_span = string_mean - string_base;
+                if (new_octave_span > string_octave_span)
+                    string_octave_span = new_octave_span;
 
-                if (!btn1_prev && btn1)
+                if (!string_touched) {
+                    setLED(0, 0);
                     state = IDLE;
+                }
 
                 break;
 
@@ -144,11 +153,17 @@ int main(void)
         }
 
 
-        if (btn1 && state != CALIBRATE_BASE && state != CALIBRATE_OCTAVE) {
+        if (btn1 && state != CALIBRATE) {
             // SW1 pressed: Enter calibration mode
             noteOff(current_note, 127);
 
-            state = CALIBRATE_BASE;
+            // Reset values
+            string_base = 10000;
+            string_octave_span = 0;
+
+            setLED(0, 1);
+
+            state = CALIBRATE;
         }
 
         delayMs(STRING_SAMPLING_DELAY);
