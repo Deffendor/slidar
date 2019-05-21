@@ -13,6 +13,7 @@
 #include "leds.h"
 #include "slidarr.h"
 #include "uart.h"
+#include "sttimer.h"
 
 
 enum state_t {
@@ -57,6 +58,23 @@ int main(void)
     initADC();
     initUART();
     initHistory(string_history, STRING_HISTORY_SIZE);
+    initSysTickTimer(STRING_SAMPLING_DELAY * 1000); // in microseconds
+
+    //ToDo: example on how to use the timer, delete whole block if not needed no more
+    /*while(1){
+        // use either this way
+        if (SYSTICK_CTRL_R & 0x00010000){ //when reading this register the 16th bit is
+            // the flag that is raised when the timer arrived at 0. It will continue counting
+            // down again without needing to activate anything. Strangely when reading
+            // the value it automatically resets the flag to 0.
+
+            //do something
+        }
+
+        // or use it this way (recommended)
+        while(!(SYSTICK_CTRL_R & 0x00010000)){}
+        //do something
+    }*/
 
     while(1){
         readADC(&string_current);
@@ -167,6 +185,11 @@ int main(void)
         }
 
         delayMs(STRING_SAMPLING_DELAY);
+        //while(!(SYSTICK_CTRL_R & 0x00010000)){} //uncomment to use
+        // when reading this register the 16th bit is
+        // the flag that is raised when the timer arrived at 0. It will continue counting
+        // down again without needing to activate anything. Strangely when reading
+        // the value it automatically resets the flag to 0.
     }
 }
 
