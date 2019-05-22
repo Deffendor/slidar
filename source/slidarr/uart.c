@@ -30,9 +30,10 @@ void initUART() {
     UART4_FBRD_R = 11;  //44 for 115200
 
     UART4_CC_R = 0; // Select UART4 clock source (internal in this case)
-    UART4_LCRH_R = 96; //or 0x60 / 1 stop bit, no FIFO, no parity, 8 bit data
+    UART4_LCRH_R = 96; //or 0x60 / 1 stop bit, no FIFO yet to flush buffer, no parity, 8 bit data
 
     UART4_CTL_R = UART4_CTL_R | UART_CTL_RXE | UART_CTL_TXE; // Enable Tx and Rx
+    UART4_LCRH_R = UART4_LCRH_R | 0x10; //enable FIFO here
     UART4_CTL_R = UART4_CTL_R | UART_CTL_UARTEN; // Enable UART again
 
     GPIO_PORTC_DEN_R = GPIO_PORTC_DEN_R | 0x30; // Set DEN
@@ -52,9 +53,10 @@ void initUART() {
     UART5_FBRD_R = 11;  // 9600
 
     UART5_CC_R = 0; // Select UART5 clock source (internal in this case)
-    UART5_LCRH_R = 96; //or 0x60 / 1 stop bit, no FIFO, no parity, 8 bit data
+    UART5_LCRH_R = 96; //or 0x60 / 1 stop bit, no FIFO yet to flush buffer, no parity, 8 bit data
 
     UART5_CTL_R = UART5_CTL_R | UART_CTL_RXE | UART_CTL_TXE; // Enable Tx and Rx
+    UART5_LCRH_R = UART5_LCRH_R | 0x10; //enable FIFO here
     UART5_CTL_R = UART5_CTL_R | UART_CTL_UARTEN; // Enable UART again
 
     GPIO_PORTE_DEN_R = GPIO_PORTE_DEN_R | 0x30; // Set DEN
