@@ -14,6 +14,7 @@
 #define DEFAULT_STRING_BASE 3000
 #define DEFAULT_BASE_FREQUENCY 261.63
 #define PITCHBEND_RESOLUTION 8192*2
+#define PITCHBEND_INTERVAL 2 // Interval [ms] between pitchbend messages
 
 #define STRING_HISTORY_SIZE 5
 #define STRING_SAMPLING_DELAY 5

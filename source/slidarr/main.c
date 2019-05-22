@@ -48,6 +48,9 @@ int main(void)
 
     int string_touched, string_untouched = 0, string_moving = 0;
 
+    int time = 0;
+    int time_last_pitchbend = 0;
+
     enum state_t state = IDLE;
 
     int btn1, btn2, btn1_prev = 0, btn2_prev = 0;
@@ -59,22 +62,6 @@ int main(void)
     initUART();
     initHistory(string_history, STRING_HISTORY_SIZE);
     initSysTickTimer(STRING_SAMPLING_DELAY * 1000); // in microseconds
-
-    //ToDo: example on how to use the timer, delete whole block if not needed no more
-    /*while(1){
-        // use either this way
-        if (SYSTICK_CTRL_R & 0x00010000){ //when reading this register the 16th bit is
-            // the flag that is raised when the timer arrived at 0. It will continue counting
-            // down again without needing to activate anything. Strangely when reading
-            // the value it automatically resets the flag to 0.
-
-            //do something
-        }
-
-        // or use it this way (recommended)
-        while(!(SYSTICK_CTRL_R & 0x00010000)){}
-        //do something
-    }*/
 
     while(1){
         readADC(&string_current);
@@ -119,10 +106,16 @@ int main(void)
             case SLIDE:
                 // String is being touched: Bend the pitch.
 
-                // Calculate amount of bending
-                pitchbend_offset = (string_mean - touchdown_val)/(float) string_octave_span * PITCHBEND_RESOLUTION;
+                // Send pitchbend message with specified interval
+                if (time > time_last_pitchbend + PITCHBEND_INTERVAL) {
 
-                pitchbend(pitchbend_offset);
+                // Calculate amount of bending
+                  pitchbend_offset = (string_mean - touchdown_val)
+                    /(float) string_octave_span * PITCHBEND_RESOLUTION;
+
+                  pitchbend(pitchbend_offset);
+                  time_last_pitchbend = time;
+                }
 
                 if (!string_touched) {
                     // String has been released: Turn the note off.
@@ -184,12 +177,8 @@ int main(void)
             state = CALIBRATE;
         }
 
-        delayMs(STRING_SAMPLING_DELAY);
-        //while(!(SYSTICK_CTRL_R & 0x00010000)){} //uncomment to use
-        // when reading this register the 16th bit is
-        // the flag that is raised when the timer arrived at 0. It will continue counting
-        // down again without needing to activate anything. Strangely when reading
-        // the value it automatically resets the flag to 0.
+        waitForSystick();
+        time += STRING_SAMPLING_DELAY;
     }
 }
 

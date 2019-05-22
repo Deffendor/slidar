@@ -20,3 +20,13 @@ void setSysTickInterval(int timeInUs){ //time in microseconds
     int ticks = timeInUs * 16;
     SYSTICK_RELOAD_R = ticks;
 }
+
+void waitForSystick() {
+   // when reading this register the 16th bit is
+   // the flag that is raised when the timer arrived at 0. It will continue counting
+   // down again without needing to activate anything. Strangely when reading
+   // the value it automatically resets the flag to 0.
+   
+    while(!(SYSTICK_CTRL_R & 0x00010000));
+}
+

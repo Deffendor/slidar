@@ -14,5 +14,6 @@
 
 void initSysTickTimer();
 void setSysTickInterval(int timeInUs); //time in micro seconds
+void waitForSystick(); //time in micro seconds
 
 #endif /* STTIMER_H_ */
