@@ -13,6 +13,7 @@
 #include "leds.h"
 #include "slidarr.h"
 #include "uart.h"
+#include "sttimer.h"
 
 
 enum state_t {
@@ -47,6 +48,9 @@ int main(void)
 
     int string_touched, string_untouched = 0, string_moving = 0;
 
+    int time = 0;
+    int time_last_pitchbend = 0;
+
     enum state_t state = IDLE;
 
     int btn1, btn2, btn1_prev = 0, btn2_prev = 0;
@@ -57,6 +61,7 @@ int main(void)
     initADC();
     initUART();
     initHistory(string_history, STRING_HISTORY_SIZE);
+    initSysTickTimer(STRING_SAMPLING_DELAY * 1000); // in microseconds
 
     while(1){
         readADC(&string_current);
@@ -101,11 +106,16 @@ int main(void)
             case SLIDE:
                 // String is being touched: Bend the pitch.
 
-                // Calculate amount of bending
-                pitchbend_offset = (string_mean - touchdown_val)/(float) string_octave_span * PITCHBEND_RESOLUTION;
+                // Send pitchbend message with specified interval
+                if (time > time_last_pitchbend + PITCHBEND_INTERVAL && !string_moving) {
 
-                if (!string_moving)
-                    pitchbend(pitchbend_offset);
+                  // Calculate amount of bending
+                  pitchbend_offset = (string_mean - touchdown_val)
+                    /(float) string_octave_span * PITCHBEND_RESOLUTION;
+
+                  pitchbend(pitchbend_offset);
+                  time_last_pitchbend = time;
+                }
 
                 if (!string_touched) {
                     // String has been released: Turn the note off.
@@ -167,7 +177,8 @@ int main(void)
             state = CALIBRATE;
         }
 
-        delayMs(STRING_SAMPLING_DELAY);
+        waitForSystick();
+        time += STRING_SAMPLING_DELAY;
     }
 }
 
