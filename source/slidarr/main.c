@@ -104,7 +104,8 @@ int main(void)
                 // Calculate amount of bending
                 pitchbend_offset = (string_mean - touchdown_val)/(float) string_octave_span * PITCHBEND_RESOLUTION;
 
-                pitchbend(pitchbend_offset);
+                if (!string_moving)
+                    pitchbend(pitchbend_offset);
 
                 if (!string_touched) {
                     // String has been released: Turn the note off.
@@ -135,7 +136,7 @@ int main(void)
                 if (new_octave_span > string_octave_span)
                     string_octave_span = new_octave_span;
 
-                if (!string_touched) {
+                if (!string_touched || string_moving) {
                     setLED(0, 0);
                     state = IDLE;
                 }
