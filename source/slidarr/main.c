@@ -43,6 +43,7 @@ int main(void)
     float touchdown_freq;
 
     int current_note;
+    int note_on = 0;
     float current_note_freq;
     int touchdown_val;
     int note_val;
@@ -95,7 +96,7 @@ int main(void)
 
                 if (string_touched && !string_moving) { // TODO implement better detection of touch (filter string_current and measure over time)
 
-                    // String has been touched: Turn the note on.
+                    // Calculate active note
                     current_note = freqToNote(current_freq);
                     current_note_freq = noteToFreq(current_note);
                     note_val = freqToPos(base_freq, string_base, string_octave_span, current_note_freq);
@@ -103,7 +104,6 @@ int main(void)
                     touchdown_val = note_val; // store current val (for pitchbending)
                     touchdown_freq = current_freq;
 
-                    noteOn(current_note, 127);
                     state = SLIDE;
                     setLED(1, 1);
                 }
@@ -124,20 +124,31 @@ int main(void)
                     // String has been released, or pitchbend reached maximum: 
                     // Turn the note off.
                     noteOff(current_note, 127);
-                    setLED(1, 0);
+                    note_on = 0;
+                    
+                    // Reset pitchbend
+                    pitchbend(0);
 
+                    setLED(1, 0);
                     state = IDLE;
                 } else if (time > time_last_pitchbend + PITCHBEND_INTERVAL && !string_moving) {
                     // Send pitchbend message with specified interval
 
                     pitchbend(pitchbend_offset);
                     time_last_pitchbend = time;
+
+                    // Turn on note _after_ pitchbend has been set
+                    if (!note_on) {
+                      noteOn(current_note, 127);
+                      note_on = 1;
+                    }
                 }
                 
 
                 if (btn2) {
                     // SW2 pressed: Scroll the frequency
                     noteOff(current_note, 127);
+                    note_on = 0;
 
                     prev_base_freq = base_freq;
                     state = SCROLL;
@@ -177,7 +188,10 @@ int main(void)
 
         if (btn1 && state != CALIBRATE) {
             // SW1 pressed: Enter calibration mode
-            noteOff(current_note, 127);
+            if (note_on) {
+              noteOff(current_note, 127);
+              note_on = 0;
+            }
 
             // Reset values
             string_base = 10000;
