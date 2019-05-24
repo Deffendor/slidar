@@ -47,6 +47,7 @@ int main(void)
     int touchdown_val;
     int note_val;
     int pitchbend_offset;
+    int semitone_span = DEFAULT_STRING_OCTAVE_SPAN/12;
 
     int string_touched, string_untouched = 0, string_moving = 0;
 
@@ -111,9 +112,14 @@ int main(void)
             case SLIDE:
                 // String is being touched: Bend the pitch.
 
+                // Calculate amount of bending
+                pitchbend_offset = (string_mean - touchdown_val)
+                  /(float) (semitone_span*PITCHBEND_MAX_SEMITONES)
+                  *PITCHBEND_MAX/2;
+
                 if (!string_touched
-                  || pitchbend_offset > PITCHBEND_MAX_VAL
-                  ||  pitchbend_offset < -PITCHBEND_MAX_VAL) {
+                  || pitchbend_offset > PITCHBEND_MAX/2
+                  ||  pitchbend_offset < -PITCHBEND_MAX/2) {
 
                     // String has been released, or pitchbend reached maximum: 
                     // Turn the note off.
@@ -123,10 +129,6 @@ int main(void)
                     state = IDLE;
                 } else if (time > time_last_pitchbend + PITCHBEND_INTERVAL && !string_moving) {
                     // Send pitchbend message with specified interval
-
-                    // Calculate amount of bending
-                    pitchbend_offset = (string_mean - touchdown_val)
-                      /(float) string_octave_span * PITCHBEND_RESOLUTION;
 
                     pitchbend(pitchbend_offset);
                     time_last_pitchbend = time;
@@ -155,6 +157,7 @@ int main(void)
                     string_octave_span = new_octave_span;
 
                 if (!string_touched || string_moving) {
+                    semitone_span = string_octave_span/12;
                     setLED(0, 0);
                     state = IDLE;
                 }
