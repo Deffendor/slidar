@@ -147,9 +147,7 @@ int main(void)
 
                 if (btn2) {
                     // SW2 pressed: Scroll the frequency
-                    noteOff(current_note, 127);
-                    note_on = 0;
-
+                    
                     prev_base_freq = base_freq;
                     state = SCROLL;
                 }
@@ -180,7 +178,7 @@ int main(void)
                 base_freq = prev_base_freq + current_freq - touchdown_freq;
 
                 if (!btn2)
-                    state = IDLE;
+                    state = SLIDE;
 
                 break;
         }
