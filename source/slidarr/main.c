@@ -111,24 +111,27 @@ int main(void)
             case SLIDE:
                 // String is being touched: Bend the pitch.
 
-                // Send pitchbend message with specified interval
-                if (time > time_last_pitchbend + PITCHBEND_INTERVAL && !string_moving) {
+                if (!string_touched
+                  || pitchbend_offset > PITCHBEND_MAX_VAL
+                  ||  pitchbend_offset < -PITCHBEND_MAX_VAL) {
 
-                  // Calculate amount of bending
-                  pitchbend_offset = (string_mean - touchdown_val)
-                    /(float) string_octave_span * PITCHBEND_RESOLUTION;
-
-                  pitchbend(pitchbend_offset);
-                  time_last_pitchbend = time;
-                }
-
-                if (!string_touched) {
-                    // String has been released: Turn the note off.
+                    // String has been released, or pitchbend reached maximum: 
+                    // Turn the note off.
                     noteOff(current_note, 127);
                     setLED(1, 0);
 
                     state = IDLE;
+                } else if (time > time_last_pitchbend + PITCHBEND_INTERVAL && !string_moving) {
+                    // Send pitchbend message with specified interval
+
+                    // Calculate amount of bending
+                    pitchbend_offset = (string_mean - touchdown_val)
+                      /(float) string_octave_span * PITCHBEND_RESOLUTION;
+
+                    pitchbend(pitchbend_offset);
+                    time_last_pitchbend = time;
                 }
+                
 
                 if (btn2) {
                     // SW2 pressed: Scroll the frequency
