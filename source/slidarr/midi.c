@@ -68,6 +68,6 @@ int freqToNote(float freq) {
     return log(freq/440.0)/log(2) * 12 + 69;
 }
 
-int noteToFreq(int note) {
+float noteToFreq(int note) {
   return powf(2, (note - 69)/12.0) * 440.0;
 }

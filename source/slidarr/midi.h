@@ -12,5 +12,6 @@ void noteOn(int note, int velocity);
 void noteOff(int note, int velocity);
 void pitchbend(int value);
 int freqToNote(float freq);
+float noteToFreq(int note);
 
 #endif /* MIDI_H_ */
