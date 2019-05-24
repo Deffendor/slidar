@@ -9,13 +9,17 @@
 
 #include <math.h>
 
-float calcFreq(float base_freq, int base_val, int octave_span, int current_val) {
+float posToFreq(float base_freq, int base_val, int octave_span, int current_val) {
     float octave_frac, freq;
 
     octave_frac = (current_val - base_val) / (float) octave_span;
     freq = base_freq + powf(2, octave_frac) * base_freq;
 
     return freq;
+}
+
+int freqToPos(float base_freq, int base_val, int octave_span, float freq) {
+    return log(freq/base_freq - 1)/log(2)*octave_span + base_val;
 }
 
 void initHistory(int *history, int max_items) {

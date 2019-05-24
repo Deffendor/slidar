@@ -43,7 +43,9 @@ int main(void)
     float touchdown_freq;
 
     int current_note;
+    float current_note_freq;
     int touchdown_val;
+    int note_val;
     int pitchbend_offset;
 
     int string_touched, string_untouched = 0, string_moving = 0;
@@ -70,7 +72,7 @@ int main(void)
         string_mean = getMean(string_history, STRING_HISTORY_SIZE);
         string_stddev = getStdDev(string_history, STRING_HISTORY_SIZE);
 
-        current_freq = calcFreq(base_freq, string_base, string_octave_span, string_mean);
+        current_freq = posToFreq(base_freq, string_base, string_octave_span, string_mean);
 
         // Store previous button states
         btn1_prev = btn1;
@@ -94,7 +96,10 @@ int main(void)
 
                     // String has been touched: Turn the note on.
                     current_note = freqToNote(current_freq);
-                    touchdown_val = string_current; // store current val (for pitchbending)
+                    current_note_freq = noteToFreq(current_note);
+                    note_val = freqToPos(base_freq, string_base, string_octave_span, current_note_freq);
+
+                    touchdown_val = note_val; // store current val (for pitchbending)
                     touchdown_freq = current_freq;
 
                     noteOn(current_note, 127);
