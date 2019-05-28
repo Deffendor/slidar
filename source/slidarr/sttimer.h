@@ -1,5 +1,5 @@
 /*
- *  timer.h
+ *  sttimer.h
  *
  *  Created on: May 21, 2019
  *      Author: soren

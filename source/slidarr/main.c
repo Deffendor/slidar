@@ -1,6 +1,6 @@
-#define RED_LED    (*((volatile uint32_t *)(0x42000000 + (0x400253FC-0x40000000)*32 + 1*4)))   //GPIO_PIN_1
-#define GREEN_LED  (*((volatile uint32_t *)(0x42000000 + (0x400253FC-0x40000000)*32 + 3*4)))   //GPIO_PIN_2
-#define BLUE_LED (*((volatile uint32_t *)(0x42000000 + (0x400253FC-0x40000000)*32 + 2*4))) //GPIO_PIN_3
+//#define RED_LED    (*((volatile uint32_t *)(0x42000000 + (0x400253FC-0x40000000)*32 + 1*4)))   //GPIO_PIN_1
+//#define GREEN_LED  (*((volatile uint32_t *)(0x42000000 + (0x400253FC-0x40000000)*32 + 3*4)))   //GPIO_PIN_2
+//#define BLUE_LED (*((volatile uint32_t *)(0x42000000 + (0x400253FC-0x40000000)*32 + 2*4))) //GPIO_PIN_3
 
 #include <tm4c123gh6pm.h>
 #include <stdint.h>
@@ -14,6 +14,7 @@
 #include "slidarr.h"
 #include "uart.h"
 #include "sttimer.h"
+#include "titimer.h"
 
 
 enum state_t {
@@ -22,6 +23,8 @@ enum state_t {
     CALIBRATE,
     SCROLL
 };
+
+volatile int btn1, btn2;
 
 /**
  * main.c
@@ -57,7 +60,9 @@ int main(void)
 
     enum state_t state = IDLE;
 
-    int btn1, btn2, btn1_prev = 0, btn2_prev = 0;
+    int btn1_prev = 0, btn2_prev = 0;
+    btn1 = 0;
+    btn2 = 0;
     int new_octave_span;
 
     initButtons();
@@ -66,6 +71,7 @@ int main(void)
     initUART();
     initHistory(string_history, STRING_HISTORY_SIZE);
     initSysTickTimer(STRING_SAMPLING_DELAY * 1000); // in microseconds
+    initTiTimer();
 
     while(1){
         readADC(&string_current);
@@ -206,34 +212,38 @@ int main(void)
 }
 
 
-//Interrupt Status - Interrupt Service Routines (ISRs)
-void GPIOPortF_Handler(void)
-{
-    if (GPIO_PORTF_RIS_R & 0x10) //button 2 F4
-    {
-        // GPIO_PORTF_MIS_R = 0x10;
-        GPIO_PORTF_ICR_R = 0x10;    //edge-detect interrupt cleared by writing a '1'
-        //Here! executed code
-    }
-        if (GPIO_PORTF_RIS_R & 0x01) //button 1 F0
-    {
-        GPIO_PORTF_ICR_R = 0x01;    //edge-detect interrupt cleared by writing a '1'
-        //Here! executed code
-    }
+void GPIO_PORTF_InterruptHandler(void){
+    GPIO_PORTF_ICR_R |= 0x11; // clear interrupt
+    NVIC_DIS0_R |= 0x40000000; // disable while waiting for debounce
+    NVIC_EN0_R |= 0x00080000; // enable timer, somehow disable always disables all
+    TIMER0_CTL_R |= 0x01; // start timer
 }
 
-void GPIOPortD_Handler(void)
-{
-    if (GPIO_PORTD_RIS_R & 0x04) //button 3 D2
-    {
-        GPIO_PORTD_ICR_R = 0x04;    //edge-detect interrupt cleared by writing a '1'
-        //Here! executed code
+
+void Timer0A_InterruptHandler(void){
+    volatile int readback; //dummy variable to write to
+
+    // read buttons here
+    if(GPIO_PORTF_RIS_R & 0x01){
+        btn1 = 1;
+    } else {
+        btn1 = 0;
     }
-    if (GPIO_PORTD_RIS_R & 0x08) //button 4 D3
-    {
-        GPIO_PORTD_ICR_R = 0x08;    //edge-detect interrupt cleared by writing a '1'
-        //Here! executed code
+
+    if(GPIO_PORTF_RIS_R & 0x10){
+        btn2 = 1;
+    } else {
+        btn2 = 0;
     }
+
+    // reset button interrupts
+    NVIC_EN0_R |= 0x40000000; // enable switch interrupts again
+    GPIO_PORTF_ICR_R |= 0x11; // clear interrupt
+    readback = GPIO_PORTF_ICR_R; // force read to clear
+
+    // reset timer
+    TIMER0_ICR_R = 0x1;
+    readback = TIMER0_ICR_R;
 }
 
 
