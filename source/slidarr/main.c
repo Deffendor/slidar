@@ -60,7 +60,7 @@ int main(void)
 
     enum state_t state = IDLE;
 
-    int btn1_prev = 0, btn2_prev = 0;
+    //int btn1_prev = 0, btn2_prev = 0;
     btn1 = 0;
     btn2 = 0;
     int new_octave_span;
@@ -83,12 +83,12 @@ int main(void)
         current_freq = posToFreq(base_freq, string_base, string_octave_span, string_mean);
 
         // Store previous button states
-        btn1_prev = btn1;
-        btn2_prev = btn2;
+        //btn1_prev = btn1;
+        //btn2_prev = btn2;
 
         // Read button states
-        btn1 = readButton(0); // TODO read and debounce buttons
-        btn2 = readButton(1);
+        //btn1 = readButton(0); // TODO read and debounce buttons
+        //btn2 = readButton(1);
 
         // Boolean to check if string is being touched
         string_touched = string_mean > STRING_THRESHOLD;
@@ -195,6 +195,7 @@ int main(void)
             if (note_on) {
               noteOff(current_note, 127);
               note_on = 0;
+              btn1 = 0;
             }
 
             // Reset values
