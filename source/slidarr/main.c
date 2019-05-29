@@ -225,13 +225,13 @@ void Timer0A_InterruptHandler(void){
     volatile int readback; //dummy variable to write to
 
     // read buttons here
-    if(GPIO_PORTF_RIS_R & 0x01){
+    if(GPIO_PORTF_DATA_R & 0x01){
         btn1 = 1;
     } else {
         btn1 = 0;
     }
 
-    if(GPIO_PORTF_RIS_R & 0x10){
+    if(GPIO_PORTF_DATA_R & 0x10){
         btn2 = 1;
     } else {
         btn2 = 0;
