@@ -226,15 +226,15 @@ void Timer0A_InterruptHandler(void){
 
     // read buttons here
     if(GPIO_PORTF_DATA_R & 0x01){
-        btn1 = 1;
-    } else {
-        btn1 = 0;
-    }
-
-    if(GPIO_PORTF_DATA_R & 0x10){
         btn2 = 1;
     } else {
         btn2 = 0;
+    }
+
+    if(GPIO_PORTF_DATA_R & 0x10){
+        btn1 = 1;
+    } else {
+        btn1 = 0;
     }
 
     // reset button interrupts
