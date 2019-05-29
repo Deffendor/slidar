@@ -155,6 +155,7 @@ int main(void)
                     // SW2 pressed: Scroll the frequency
                     
                     prev_base_freq = base_freq;
+                    setLED(2,1);
                     state = SCROLL;
                 }
 
@@ -183,8 +184,10 @@ int main(void)
                 // Move the base frequency by sliding and holding button 2
                 base_freq = prev_base_freq + current_freq - touchdown_freq;
 
-                if (!btn2)
+                if (!btn2){
+                    setLED(2,0);
                     state = SLIDE;
+                }
 
                 break;
         }
@@ -226,15 +229,15 @@ void Timer0A_InterruptHandler(void){
 
     // read buttons here
     if(GPIO_PORTF_DATA_R & 0x01){
-        btn2 = 1;
-    } else {
-        btn2 = 0;
-    }
-
-    if(GPIO_PORTF_DATA_R & 0x10){
         btn1 = 1;
     } else {
         btn1 = 0;
+    }
+
+    if(GPIO_PORTF_DATA_R & 0x10){
+        btn2= 1;
+    } else {
+        btn2 = 0;
     }
 
     // reset button interrupts
