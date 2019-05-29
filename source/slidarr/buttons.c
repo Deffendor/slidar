@@ -26,9 +26,9 @@ void initButtons() {
 
     // interrupt specific
     GPIO_PORTF_IS_R &= ~0x11;           //F: At edge-sensitive &= ~0x11;
-    GPIO_PORTF_IBE_R &= ~0x01;          //F: Interrupt generation by IEV on PF0
+    GPIO_PORTF_IBE_R |= 0x01;          //F: Interrupt generation both edges on PF0
     GPIO_PORTF_IBE_R |= 0x10;           //F: Interrupt generation both edges on PF4
-    GPIO_PORTF_IEV_R &= ~0x01;          //F: Detecting falling edge or a Low level on PF0
+    //GPIO_PORTF_IEV_R &= ~0x01;          //F: Detecting falling edge or a Low level on PF0
     GPIO_PORTF_ICR_R |= 0x11;           //F: Flag - interrupt is cleared
     GPIO_PORTF_IM_R |= 0x11;            //F: ARM interrupt - Unmask
 

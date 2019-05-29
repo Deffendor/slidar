@@ -60,7 +60,7 @@ int main(void)
 
     enum state_t state = IDLE;
 
-    //int btn1_prev = 0, btn2_prev = 0;
+    int btnCalibrate = 0, btnScroll = 0;
     btn1 = 0;
     btn2 = 0;
     int new_octave_span;
@@ -82,13 +82,18 @@ int main(void)
 
         current_freq = posToFreq(base_freq, string_base, string_octave_span, string_mean);
 
-        // Store previous button states
-        //btn1_prev = btn1;
-        //btn2_prev = btn2;
+        //  read to not get stuck
+        if(btn1){
+            btn1 = readButton(0);
+        }
 
-        // Read button states
-        //btn1 = readButton(0); // TODO read and debounce buttons
-        //btn2 = readButton(1);
+        if(btn2){
+            btn2 = readButton(1);
+        }
+
+        // Store button states
+        btnCalibrate = btn1;
+        btnScroll = btn2;
 
         // Boolean to check if string is being touched
         string_touched = string_mean > STRING_THRESHOLD;
@@ -151,7 +156,7 @@ int main(void)
                 }
                 
 
-                if (btn2) {
+                if (btnScroll) {
                     // SW2 pressed: Scroll the frequency
                     
                     prev_base_freq = base_freq;
@@ -184,7 +189,7 @@ int main(void)
                 // Move the base frequency by sliding and holding button 2
                 base_freq = prev_base_freq + current_freq - touchdown_freq;
 
-                if (!btn2){
+                if (!btnScroll){
                     setLED(2,0);
                     state = SLIDE;
                 }
@@ -193,12 +198,12 @@ int main(void)
         }
 
 
-        if (btn1 && state != CALIBRATE) {
+        if (btnCalibrate && state != CALIBRATE) {
             // SW1 pressed: Enter calibration mode
             if (note_on) {
               noteOff(current_note, 127);
               note_on = 0;
-              btn1 = 0;
+              //btn1 = 0;
             }
 
             // Reset values
@@ -228,17 +233,8 @@ void Timer0A_InterruptHandler(void){
     volatile int readback; //dummy variable to write to
 
     // read buttons here
-    if(GPIO_PORTF_DATA_R & 0x01){
-        btn1 = 1;
-    } else {
-        btn1 = 0;
-    }
-
-    if(GPIO_PORTF_DATA_R & 0x10){
-        btn2= 1;
-    } else {
-        btn2 = 0;
-    }
+    btn1 = readButton(0);
+    btn2 = readButton(1);
 
     // reset button interrupts
     NVIC_EN0_R |= 0x40000000; // enable switch interrupts again
