@@ -10,7 +10,7 @@
 #include <stdint.h>
 #include "utils.h"
 
-void initUART() {
+void initUART(int baudRate) {
 
     // tty / USB
     /////////////////////// Setup UART4 //////////////////////////////////
@@ -24,10 +24,24 @@ void initUART() {
     // BaudRate = SysClk / (16 x ClkDiv)
     // so at 9600 BaudRate and Clock at 16MHz(default)
     // -> 104.1666666
-    // UARTIBRD = 104
-    // UARTFBRD = 0.166666 x 64 + 0.5 (0.5 is to round) -> 11
-    UART4_IBRD_R = 104; //8 for 115200
-    UART4_FBRD_R = 11;  //44 for 115200
+    // UARTIBRD = 104 for 9600
+    // UARTFBRD = 0.166666 x 64 + 0.5 (0.5 is to round) -> 11 for 9600
+    // UARTIBRD -> 8 for 115200
+    // UARTFBRD -> 44 for 115200
+
+    if(baudRate == 9600){
+        UART4_IBRD_R = 104;
+        UART4_FBRD_R = 11;
+    } else if (baudRate == 38400){
+        UART4_IBRD_R = 26;
+        UART4_FBRD_R = 3;
+    } else if (baudRate == 115200){
+        UART4_IBRD_R = 8;
+        UART4_FBRD_R = 44;
+    } else { // fall back to 9600
+        UART4_IBRD_R = 104;
+        UART4_FBRD_R = 11;
+    }
 
     UART4_CC_R = 0; // Select UART4 clock source (internal in this case)
     UART4_LCRH_R = 96; //or 0x60 / 1 stop bit, no FIFO yet to flush buffer, no parity, 8 bit data
@@ -49,8 +63,19 @@ void initUART() {
     SYSCTL_RCGCGPIO_R |= SYSCTL_RCGCGPIO_R5; // PortE clock
     UART5_CTL_R = UART5_CTL_R & ~UART_CTL_UARTEN; // Enable UART5
 
-    UART5_IBRD_R = 104; // 9600
-    UART5_FBRD_R = 11;  // 9600
+    if(baudRate == 9600){
+        UART5_IBRD_R = 104;
+        UART5_FBRD_R = 11;
+    } else if (baudRate == 38400){
+        UART5_IBRD_R = 26;
+        UART5_FBRD_R = 3;
+    } else if (baudRate == 115200){
+        UART5_IBRD_R = 8;
+        UART5_FBRD_R = 44;
+    } else { // fall back to 9600
+        UART5_IBRD_R = 104;
+        UART5_FBRD_R = 11;
+    }
 
     UART5_CC_R = 0; // Select UART5 clock source (internal in this case)
     UART5_LCRH_R = 96; //or 0x60 / 1 stop bit, no FIFO yet to flush buffer, no parity, 8 bit data

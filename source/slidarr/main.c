@@ -1,7 +1,3 @@
-//#define RED_LED    (*((volatile uint32_t *)(0x42000000 + (0x400253FC-0x40000000)*32 + 1*4)))   //GPIO_PIN_1
-//#define GREEN_LED  (*((volatile uint32_t *)(0x42000000 + (0x400253FC-0x40000000)*32 + 3*4)))   //GPIO_PIN_2
-//#define BLUE_LED (*((volatile uint32_t *)(0x42000000 + (0x400253FC-0x40000000)*32 + 2*4))) //GPIO_PIN_3
-
 #include <tm4c123gh6pm.h>
 #include <stdint.h>
 
@@ -24,7 +20,8 @@ enum state_t {
     SCROLL
 };
 
-volatile int btn1, btn2;
+volatile int btn1;// btn1 is SW2 which is connected to PF0
+volatile int btn2;// btn2 is SW1 which is connected to PF4
 
 /**
  * main.c
@@ -53,7 +50,7 @@ int main(void)
     int pitchbend_offset;
     int semitone_span = DEFAULT_STRING_OCTAVE_SPAN/12;
 
-    int string_touched, string_untouched = 0, string_moving = 0;
+    int string_touched, string_moving = 0; //string_untouched = 0,
 
     int time = 0;
     int time_last_pitchbend = 0;
@@ -68,7 +65,7 @@ int main(void)
     initButtons();
     initLEDs();
     initADC();
-    initUART();
+    initUART(BAUD_RATE);
     initHistory(string_history, STRING_HISTORY_SIZE);
     initSysTickTimer(STRING_SAMPLING_DELAY * 1000); // in microseconds
     initTiTimer();
