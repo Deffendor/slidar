@@ -1,7 +1,3 @@
-#define RED_LED    (*((volatile uint32_t *)(0x42000000 + (0x400253FC-0x40000000)*32 + 1*4)))   //GPIO_PIN_1
-#define GREEN_LED  (*((volatile uint32_t *)(0x42000000 + (0x400253FC-0x40000000)*32 + 3*4)))   //GPIO_PIN_2
-#define BLUE_LED (*((volatile uint32_t *)(0x42000000 + (0x400253FC-0x40000000)*32 + 2*4))) //GPIO_PIN_3
-
 #include <tm4c123gh6pm.h>
 #include <stdint.h>
 
@@ -14,6 +10,7 @@
 #include "slidarr.h"
 #include "uart.h"
 #include "sttimer.h"
+#include "titimer.h"
 
 
 enum state_t {
@@ -22,6 +19,9 @@ enum state_t {
     CALIBRATE,
     SCROLL
 };
+
+volatile int btn1;// btn1 is SW2 which is connected to PF0
+volatile int btn2;// btn2 is SW1 which is connected to PF4
 
 /**
  * main.c
@@ -50,22 +50,25 @@ int main(void)
     int pitchbend_offset;
     int semitone_span = DEFAULT_STRING_OCTAVE_SPAN/12;
 
-    int string_touched, string_untouched = 0, string_moving = 0;
+    int string_touched, string_moving = 0; //string_untouched = 0,
 
     int time = 0;
     int time_last_pitchbend = 0;
 
     enum state_t state = IDLE;
 
-    int btn1, btn2, btn1_prev = 0, btn2_prev = 0;
+    int btnCalibrate = 0, btnScroll = 0;
+    btn1 = 0;
+    btn2 = 0;
     int new_octave_span;
 
     initButtons();
     initLEDs();
     initADC();
-    initUART();
+    initUART(BAUD_RATE);
     initHistory(string_history, STRING_HISTORY_SIZE);
     initSysTickTimer(STRING_SAMPLING_DELAY * 1000); // in microseconds
+    initTiTimer();
 
     while(1){
         readADC(&string_current);
@@ -76,13 +79,18 @@ int main(void)
 
         current_freq = posToFreq(base_freq, string_base, string_octave_span, string_mean);
 
-        // Store previous button states
-        btn1_prev = btn1;
-        btn2_prev = btn2;
+        //  read to not get stuck
+        if(btn1){
+            btn1 = readButton(0);
+        }
 
-        // Read button states
-        btn1 = readButton(0); // TODO read and debounce buttons
-        btn2 = readButton(1);
+        if(btn2){
+            btn2 = readButton(1);
+        }
+
+        // Store button states
+        btnCalibrate = btn1;
+        btnScroll = btn2;
 
         // Boolean to check if string is being touched
         string_touched = string_mean > STRING_THRESHOLD;
@@ -145,10 +153,11 @@ int main(void)
                 }
                 
 
-                if (btn2) {
+                if (btnScroll) {
                     // SW2 pressed: Scroll the frequency
                     
                     prev_base_freq = base_freq;
+                    setLED(2,1);
                     state = SCROLL;
                 }
 
@@ -177,18 +186,21 @@ int main(void)
                 // Move the base frequency by sliding and holding button 2
                 base_freq = prev_base_freq + current_freq - touchdown_freq;
 
-                if (!btn2)
+                if (!btnScroll){
+                    setLED(2,0);
                     state = SLIDE;
+                }
 
                 break;
         }
 
 
-        if (btn1 && state != CALIBRATE) {
+        if (btnCalibrate && state != CALIBRATE) {
             // SW1 pressed: Enter calibration mode
             if (note_on) {
               noteOff(current_note, 127);
               note_on = 0;
+              //btn1 = 0;
             }
 
             // Reset values
@@ -206,34 +218,29 @@ int main(void)
 }
 
 
-//Interrupt Status - Interrupt Service Routines (ISRs)
-void GPIOPortF_Handler(void)
-{
-    if (GPIO_PORTF_RIS_R & 0x10) //button 2 F4
-    {
-        // GPIO_PORTF_MIS_R = 0x10;
-        GPIO_PORTF_ICR_R = 0x10;    //edge-detect interrupt cleared by writing a '1'
-        //Here! executed code
-    }
-        if (GPIO_PORTF_RIS_R & 0x01) //button 1 F0
-    {
-        GPIO_PORTF_ICR_R = 0x01;    //edge-detect interrupt cleared by writing a '1'
-        //Here! executed code
-    }
+void GPIO_PORTF_InterruptHandler(void){
+    GPIO_PORTF_ICR_R |= 0x11; // clear interrupt
+    NVIC_DIS0_R |= 0x40000000; // disable while waiting for debounce
+    NVIC_EN0_R |= 0x00080000; // enable timer, somehow disable always disables all
+    TIMER0_CTL_R |= 0x01; // start timer
 }
 
-void GPIOPortD_Handler(void)
-{
-    if (GPIO_PORTD_RIS_R & 0x04) //button 3 D2
-    {
-        GPIO_PORTD_ICR_R = 0x04;    //edge-detect interrupt cleared by writing a '1'
-        //Here! executed code
-    }
-    if (GPIO_PORTD_RIS_R & 0x08) //button 4 D3
-    {
-        GPIO_PORTD_ICR_R = 0x08;    //edge-detect interrupt cleared by writing a '1'
-        //Here! executed code
-    }
+
+void Timer0A_InterruptHandler(void){
+    volatile int readback; //dummy variable to write to
+
+    // read buttons here
+    btn1 = readButton(0);
+    btn2 = readButton(1);
+
+    // reset button interrupts
+    NVIC_EN0_R |= 0x40000000; // enable switch interrupts again
+    GPIO_PORTF_ICR_R |= 0x11; // clear interrupt
+    readback = GPIO_PORTF_ICR_R; // force read to clear
+
+    // reset timer
+    TIMER0_ICR_R = 0x1;
+    readback = TIMER0_ICR_R;
 }
 
 

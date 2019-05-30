@@ -13,9 +13,9 @@ void noteOn(int note, int velocity){
     char parameterKey = (char)note;
     char parameterVelocity = (char)velocity;
 
-    //ToDo: sending 6 bytes in a row and waiting for the transmission to end
-    // might block everything. At a baud rate of 9600 sending 6 bytes will take
-    // around 5ms
+    // Sending 6 bytes in a row and waiting for the transmission to end
+    // might block everything if no buffer is used. At a baud rate of 9600 sending 6 bytes will take
+    // around 5ms if no buffer used.
     UART4Tx(command);
     UART4Tx(parameterKey);
     UART4Tx(parameterVelocity);

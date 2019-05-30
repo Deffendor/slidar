@@ -20,4 +20,6 @@
 #define STRING_HISTORY_SIZE 5
 #define STRING_SAMPLING_DELAY 5
 
+#define BAUD_RATE 9600 // options are: 9600, 38400, 115200
+
 #endif /* DEFAULTS_H_ */

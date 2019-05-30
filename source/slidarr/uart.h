@@ -8,7 +8,7 @@
 #ifndef UART_H_
 #define UART_H_
 
-void initUART();
+void initUART(int baudRate);
 void UART4Tx(char c);
 char UART4Rx(void);
 void UART5Tx(char c);

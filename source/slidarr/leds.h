@@ -12,4 +12,7 @@
 #define GREEN_LED  (*((volatile uint32_t *)(0x42000000 + (0x400253FC-0x40000000)*32 + 3*4)))   //GPIO_PIN_2
 #define BLUE_LED (*((volatile uint32_t *)(0x42000000 + (0x400253FC-0x40000000)*32 + 2*4))) //GPIO_PIN_3
 
+void initLEDs();
+void setLED(int led, int state);
+
 #endif /* LEDS_H_ */
