@@ -1,3 +1,16 @@
+/*
+ * main.c
+ *
+ * Slidarr
+ * 
+ * Programming Embedded Systems, Project
+ * Uppsala University
+ * Spring semester 2019
+ * 
+ * by Mohammand E. M., Mats J., Sören M.
+ */
+
+
 #include <tm4c123gh6pm.h>
 #include <stdint.h>
 
@@ -28,39 +41,40 @@ volatile int btn2;// btn2 is SW1 which is connected to PF4
  */
 int main(void)
 {
-    int string_base = DEFAULT_STRING_BASE;
-    int string_octave_span = DEFAULT_STRING_OCTAVE_SPAN;
-    volatile int string_current; // ADC result
-    float current_freq;
+    int string_base = DEFAULT_STRING_BASE;                  // raw adc start value
+    int string_octave_span = DEFAULT_STRING_OCTAVE_SPAN;    // adc range to play on, from stirng_base to (string_base + string_octave_span)
+    volatile int string_current;                            // ADC result
+    float current_freq;                                     // corresponding keyboard frequency to string_current
 
-    int string_history[STRING_HISTORY_SIZE];
-    int string_history_index = 0;
-    float string_mean;
-    float string_stddev;
+    int string_history[STRING_HISTORY_SIZE];                // buffer array to smoothen value
+    int string_history_index = 0;                           // buffer index (ring buffer)
+    float string_mean;                                      // average is used as filtered value to create notes from
+    float string_stddev;                                    // used to detect if currently sliding
 
-    float base_freq = DEFAULT_BASE_FREQUENCY;
-    float prev_base_freq;
-    float touchdown_freq;
+    float base_freq = DEFAULT_BASE_FREQUENCY;               // reference frequency setting the location on the "keyboard"
+    float prev_base_freq;                                   // used for scrolling, changing the "keyboard" range
+    float touchdown_freq;                                   // location where the initial touch was made
+    float scroll_base_freq;                                 // used for scrolling
 
-    int current_note;
-    int note_on = 0;
-    float current_note_freq;
-    int touchdown_val;
-    int note_val;
-    int pitchbend_offset;
-    int semitone_span = DEFAULT_STRING_OCTAVE_SPAN/12;
+    int current_note;                                       // midi note converted from the frequency
+    int note_on = 0;                                        // flag that tracks the state of the note
+    float current_note_freq;                                // calculated frequency of the current_note
+    int touchdown_val;                                      // current value for pitchbending
+    int note_val;                                           //
+    int pitchbend_offset;                                   // pitchbend value to send via midi
+    int semitone_span = DEFAULT_STRING_OCTAVE_SPAN/12;      // 
 
-    int string_touched, string_moving = 0; //string_untouched = 0,
+    int string_touched, string_moving = 0; //string_untouched = 0,  // flags for the current situation on the string
 
-    int time = 0;
-    int time_last_pitchbend = 0;
+    int time = 0;                                           // time generated from systick
+    int time_last_pitchbend = 0;                            // keep track of the pitchbending
 
-    enum state_t state = IDLE;
+    enum state_t state = IDLE;                              // state
 
-    int btnCalibrate = 0, btnScroll = 0;
+    int btnCalibrate = 0, btnScroll = 0;                    // button states
     btn1 = 0;
     btn2 = 0;
-    int new_octave_span;
+    int new_octave_span;                                    // helper variable for calibration
 
     initButtons();
     initLEDs();
@@ -157,6 +171,7 @@ int main(void)
                     // SW2 pressed: Scroll the frequency
                     
                     prev_base_freq = base_freq;
+                    scroll_base_freq = base_freq;
                     setLED(2,1);
                     state = SCROLL;
                 }
@@ -184,9 +199,10 @@ int main(void)
 
             case SCROLL:
                 // Move the base frequency by sliding and holding button 2
-                base_freq = prev_base_freq + current_freq - touchdown_freq;
+                scroll_base_freq = prev_base_freq + current_freq - touchdown_freq;
 
                 if (!btnScroll){
+                    base_freq = scroll_base_freq;
                     setLED(2,0);
                     state = SLIDE;
                 }
