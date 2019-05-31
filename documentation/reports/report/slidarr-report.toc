@@ -1,0 +1,19 @@
+\contentsline {section}{\numberline {1}Project Overview}{3}
+\contentsline {subsection}{\numberline {1.1}Prestudy to now review}{3}
+\contentsline {subsection}{\numberline {1.2}Concept}{3}
+\contentsline {section}{\numberline {2}Analysis}{3}
+\contentsline {subsection}{\numberline {2.1}Resistance measurement}{3}
+\contentsline {subsection}{\numberline {2.2}Voltage measurement}{3}
+\contentsline {subsubsection}{\numberline {2.2.1}Instrumentation amplifier}{4}
+\contentsline {subsection}{\numberline {2.3}The MIDI protocol}{4}
+\contentsline {subsection}{\numberline {2.4}Sound generation}{4}
+\contentsline {section}{\numberline {3}Design}{5}
+\contentsline {subsection}{\numberline {3.1}Interface}{5}
+\contentsline {subsection}{\numberline {3.2}Electronics}{5}
+\contentsline {section}{\numberline {4}Implementation}{5}
+\contentsline {subsection}{\numberline {4.1}Making MIDI continuous}{5}
+\contentsline {subsection}{\numberline {4.2}The state machine}{5}
+\contentsline {subsection}{\numberline {4.3}Streaming MIDI}{5}
+\contentsline {subsection}{\numberline {4.4}Wireless bridge}{5}
+\contentsline {section}{\numberline {5}Testing and verification}{5}
+\contentsline {section}{\numberline {6}Results}{5}

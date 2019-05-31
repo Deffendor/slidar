@@ -22,8 +22,45 @@ Construction of the Slidarr}
 
 \pagebreak
 
-\section{Background}
+\section{Project Overview}
+
+\subsection{From prestudy to project end}
+The initial idea was to create an instrument that looks like a guitar and could even be used on a guitar but works in a completely different way. Touching or rather connecting two strings with the finger would connect them and from the location of the finger a tone would be created. This would essentially map the keys of a piano to the strings of the guitar. With that one can change the tone, pitch and also scroll to a different position on the note scale.
+
+The goal for the project is to create a prototype that can demonstrate what kind of instrument this could turn out to be in the future and give the reader/spectator further stimulation for further ideas based on this concept. To be able to realize the project and get a prototype running optimized environment settings are used. This means there is only a single string/wire and a copper finger connected to a wire to measure the resistance/distance on the string where the two would touch. See figure x.
+
+The focus for this proof of concept lies on the electronic hardware and software part so that the type of instrument created with it can vary and is in the hands of the artist.
+
+
+\subsection{Concept}
+
+The slidarr string represents a part of the traditional piano keyboard. Touching and releasing the Slidarr on the string has the same effect as pressing and releasing a piano key. The location is determined by the developed embedded system and sent to a synthesizer where the tone is generated. In addition to touching and releasing, it is also possible to slide on the point to the left or right, thus the name `Slidarr`. This has the effect of bending the pitch of the tone and jumping seamlessly to the next key/tone. 
+
+The instrument needs to be calibrated before played to know the minimum and maxiumum resistance range of the wire. After that the calibrated range is mapped to one octave on the keyboard. After starting or resetting, the Slidarr usually starts in the middle of the keyboard which is a C4 with a frequency of 261 up to the next octave.
+
+When sliding while touching the so called slide happens, which changes the frequency of the tone itself sending pitchbend messages to the synthesizer. After the pitch is on the maximum possible the software will turn the tone off and switch to the next tone.
+
+To change the current octave to another location on the keyboard a scroll is possible. While touching the slidarr, holding down the scroll button and then sliding in a desired direction the `window` of the current range slides to the left or right of the total scale.
+
+picture here of string compared to keyboard
+
+\begin{figure}[ht]
+  \centering
+  \includegraphics[width=1\textwidth]{slidarr_2_.jpg}
+  \caption{slidarr scetch}
+  \label{fig:slidarr}
+\end{figure}
+
 Blabla blabla bla.
+
+To sum it up these are the major functionalities of the Slidarr and important to know:
+\begin{itemize}
+ \item Touching, turn specifiv note on
+ \item Sliding, changing the pitch and jumping to another tone
+ \item Calibrating, setting the minimum and maximum range on the hardware for one octave
+ \item Scrolling, moving the octave on the keyboard to higher or lower tones
+\end{itemize}
+
 
 \section{Analysis}
 
@@ -76,6 +113,8 @@ A synthesizer has to be used to generate the sound from the MIDI messages.
 
 \section{Design}
 
+image of components/blocks here
+
 \subsection{Interface}
 
 \subsection{Electronics}
@@ -86,6 +125,8 @@ A synthesizer has to be used to generate the sound from the MIDI messages.
 
 \subsection{The state machine}
 
+image of simple state machine
+
 \subsection{Streaming MIDI}
 
 \subsection{Wireless bridge}
@@ -94,6 +135,11 @@ A synthesizer has to be used to generate the sound from the MIDI messages.
 
 \section{Results}
 
+\subsection{Feasability}
+
+\subsection{Future improvements and implementations}
+
+picture with concepts
 
 
 \begin{thebibliography}{9}
