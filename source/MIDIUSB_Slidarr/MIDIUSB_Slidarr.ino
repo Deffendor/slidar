@@ -3,7 +3,7 @@
 #include <stdint.h>
 
 SoftwareSerial Bluetooth(10, 9); // TX, RX (pins in Bluetooth) like TX.Bluetooth -> pin 10 in Micro
-const uint8_t *data;
+uint8_t *data;
 
 void setup() {
   // put your setup code here, to run once:
