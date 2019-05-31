@@ -24,6 +24,7 @@ void initButtons() {
     GPIO_PORTF_DIR_R &= ~0x11;          //F: input 0 for PF0 and PF4
     GPIO_PORTF_PUR_R |= 0x11;           //F: enable pull-up resistor
 
+    /*
     // interrupt specific
     GPIO_PORTF_IS_R &= ~0x11;           //F: At edge-sensitive &= ~0x11;
     GPIO_PORTF_IBE_R |= 0x01;           //F: Interrupt generation both edges on PF0
@@ -32,9 +33,10 @@ void initButtons() {
     GPIO_PORTF_ICR_R |= 0x11;           //F: Flag - interrupt is cleared
     GPIO_PORTF_IM_R |= 0x11;            //F: ARM interrupt - Unmask
 
-    /* NVIC - Exception Handlers - Configure Interrupt*/
+    // NVIC - Exception Handlers - Configure Interrupt
     NVIC_PRI7_R =  0x0000E000;          //F: Interrupt Priority 7 - Interrupt 2
     NVIC_EN0_R |= 0x40000000;           //IRQn: Enable interrupt F->30
+    */
 }
 
 int readButton(int button) {

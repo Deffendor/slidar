@@ -72,6 +72,7 @@ int main(void)
     enum state_t state = IDLE;                              // state
 
     int btnCalibrate = 0, btnScroll = 0;                    // button states
+    int btnCalibrateDebounceTime = 0, btnScrollDebounceTime = 0;
     btn1 = 0;
     btn2 = 0;
     int new_octave_span;                                    // helper variable for calibration
@@ -93,18 +94,36 @@ int main(void)
 
         current_freq = posToFreq(base_freq, string_base, string_octave_span, string_mean);
 
-        //  read to not get stuck
-        if(btn1){
-            btn1 = readButton(0);
+        btn1 = readButton(0);
+        btn2 = readButton(1);
+
+        // Debounce without interrupt
+        if(btnCalibrateDebounceTime > 0){
+            btnCalibrateDebounceTime -= STRING_SAMPLING_DELAY;
+            if(btnCalibrateDebounceTime <= 0){
+                btnCalibrate = btn1;
+            }
+        } else {
+            if(btn1 && !btnCalibrate){
+                btnCalibrateDebounceTime = 50;
+            } else {
+                btnCalibrate = btn1;
+            }
         }
 
-        if(btn2){
-            btn2 = readButton(1);
+        // Debounce without interrupt
+        if(btnScrollDebounceTime > 0){
+            btnScrollDebounceTime -= STRING_SAMPLING_DELAY;
+            if(btnScrollDebounceTime <= 0){
+                btnScroll = btn2;
+            }
+        } else {
+            if(btn2 && !btnScroll){
+                btnScrollDebounceTime = 50;
+            } else {
+                btnScroll = btn2;
+            }
         }
-
-        // Store button states
-        btnCalibrate = btn1;
-        btnScroll = btn2;
 
         // Boolean to check if string is being touched
         string_touched = string_mean > STRING_THRESHOLD;
@@ -201,6 +220,16 @@ int main(void)
                 // Move the base frequency by sliding and holding button 2
                 scroll_base_freq = prev_base_freq + current_freq - touchdown_freq;
 
+                // Check if minimum frequency is breached
+                if(scroll_base_freq < MINIMUM_BASE_FREQUENCY){
+                    scroll_base_freq = MINIMUM_BASE_FREQUENCY;
+                }
+
+                // Check if maximum frequency is breached
+                if(scroll_base_freq > MAXIMUM_BASE_FREQUENCY){
+                    scroll_base_freq = MAXIMUM_BASE_FREQUENCY;
+                }
+
                 if (!btnScroll){
                     base_freq = scroll_base_freq;
                     setLED(2,0);
@@ -251,6 +280,7 @@ void Timer0A_InterruptHandler(void){
 
     // reset button interrupts
     NVIC_EN0_R |= 0x40000000; // enable switch interrupts again
+
     GPIO_PORTF_ICR_R |= 0x11; // clear interrupt
     readback = GPIO_PORTF_ICR_R; // force read to clear
 
