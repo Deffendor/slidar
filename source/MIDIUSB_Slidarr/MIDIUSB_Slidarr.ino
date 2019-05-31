@@ -3,7 +3,7 @@
 #include <stdint.h>
 
 SoftwareSerial Bluetooth(10, 9); // TX, RX (pins in Bluetooth) like TX.Bluetooth -> pin 10 in Micro
-uint8_t data;
+const uint8_t *data;
 
 void setup() {
   // put your setup code here, to run once:
@@ -19,7 +19,7 @@ void loop() {
   while(Bluetooth.available()){
     delay(3);  //delay to allow buffer to fill 
     if (Bluetooth.available() > 0){
-      data = Bluetooth.read();
+      *data = Bluetooth.read();
 
       MidiUSB.write(data, 1);
       MidiUSB.flush(); // Not sure if needed
