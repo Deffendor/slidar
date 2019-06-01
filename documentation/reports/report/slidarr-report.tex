@@ -140,17 +140,36 @@ image of components/blocks here
 
 \section{Implementation}
 
-\subsection{Making MIDI continuous}
+\subsection{System overview}
+For the total system to play music in the end, there are four major parts: the circuit/instrument itself, the microcontroller with its peripherals, the connection to the synthesizer/computer and the synthersizer/computer. See image x.
+
+The microcontroller is an ARM Cortex-M4 (TI TM4C123GH6PM for the prototype) that is running at 16MHz. The connection to the computer or snythesizer is optionally either via a tty to USB converter, Bluetooth directly or a Bluetooth bridge with a USB compatible end device.
+
+\subsection{Peripherals}
+Peripherals used are the on-chip 12-bit ADC, General Purpose Inputs/Outputs and the UART.
+
+The analog to digital converter is 12-bit wide and the used reference voltage is the same as the microcontroller is using (3.3V). Using the above described measurement method the voltage difference from the low end of the string to the upper end lies between 0.2V to 0.4V. With a step size of 0.8mV this gives us at least 250 steps to work with per octave depending on the calibration. The ADC reads only one sample at a time from a single channel and the conversion is triggered by software when needed.
+
+There are two inputs used. The two inputs are buttons, that put the device into calibration mode and into scrolling mode. For the buttons internal on-chip pull-ups are enabled so that no additional components are needed other than the button. The buttons are debounced in the software.
+
+Three outputs are connected to three LEDs of different colors by using transistors as switches and resistors to limit the current. The green LED indicates if the string is touched at the moment. The red LED signals if the calibration mode is currently running. The blue LED shows when the user is in the scrolling mode.
+
+UART ...
 
 \subsection{The state machine}
+Bare metal, without outside software...
 
 image of simple state machine
 
 \subsection{Streaming MIDI}
 
+\subsection{Making MIDI continuous}
+
 \subsection{Wireless bridge}
 
 \section{Testing and verification}
+
+\section{How to use}
 
 \section{Results}
 
