@@ -154,10 +154,19 @@ There are two inputs used. The two inputs are buttons, that put the device into 
 
 Three outputs are connected to three LEDs of different colors by using transistors as switches and resistors to limit the current. The green LED indicates if the string is touched at the moment. The red LED signals if the calibration mode is currently running. The blue LED shows when the user is in the scrolling mode.
 
-UART ...
+The UART is used to send out the MIDI bytes to the sound generating device. Only the transmit line is utilized. The receive line stays untouched for the forseeable future because there is no use for it at this stage. The UART is configured for 8 bits with baud rates of 9600, 38400 or 115200 which can be changed in the defaults.h file. The chip has a 16 byte transmit buffer that is implemented into the hardware. This makes it easy to send out multiple bytes (3 bytes for midi messages) putting them into the buffer all at once without having to wait for every single byte to be transmitted, which would block the execution otherwise.
 
 \subsection{The state machine}
-Bare metal, without outside software...
+-Bare metal, without outside software...
+-main loop
+-init
+-timing
+-data filtering, buffer, mean, stddev
+-variables, map to appendix
+-button debounced
+-string state / state machine
+-defaults
+-midi sending
 
 image of simple state machine
 
@@ -168,14 +177,27 @@ image of simple state machine
 \subsection{Wireless bridge}
 
 \section{Testing and verification}
+-with poti
+-debugging
 
 \section{How to use}
+-how to connect
+-make simple tone
+-make calibration
+-bend pitch
+-scroll
 
 \section{Results}
 
-\subsection{Feasability}
+\subsection{Conclusion Feasability Opinion }
+-
 
 \subsection{Future improvements and implementations}
+-More modular, ->CMSIS
+-multiple strings? make any sense?
+-More compact device -> optimal/cheapest microcontroller, battery powered, ...
+-Different devices
+-
 
 picture with concepts
 

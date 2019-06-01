@@ -83,7 +83,6 @@ int main(void)
     initUART(BAUD_RATE);
     initHistory(string_history, STRING_HISTORY_SIZE);
     initSysTickTimer(STRING_SAMPLING_DELAY * 1000); // in microseconds
-    initTiTimer();
 
     while(1){
         readADC(&string_current);
@@ -261,36 +260,4 @@ int main(void)
         time += STRING_SAMPLING_DELAY;
     }
 }
-
-
-void GPIO_PORTF_InterruptHandler(void){
-    GPIO_PORTF_ICR_R |= 0x11; // clear interrupt
-    NVIC_DIS0_R |= 0x40000000; // disable while waiting for debounce
-    NVIC_EN0_R |= 0x00080000; // enable timer, somehow disable always disables all
-    TIMER0_CTL_R |= 0x01; // start timer
-}
-
-
-void Timer0A_InterruptHandler(void){
-    volatile int readback; //dummy variable to write to
-
-    // read buttons here
-    btn1 = readButton(0);
-    btn2 = readButton(1);
-
-    // reset button interrupts
-    NVIC_EN0_R |= 0x40000000; // enable switch interrupts again
-
-    GPIO_PORTF_ICR_R |= 0x11; // clear interrupt
-    readback = GPIO_PORTF_ICR_R; // force read to clear
-
-    // reset timer
-    TIMER0_ICR_R = 0x1;
-    readback = TIMER0_ICR_R;
-}
-
-
-
-
-
 
