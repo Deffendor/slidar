@@ -60,7 +60,7 @@ void initUART(int baudRate) {
     // Wireless bridge
     /////////////////////// Setup UART5 //////////////////////////////////
     SYSCTL_RCGCUART_R |= SYSCTL_RCGCUART_R5; // UART5 clock
-    SYSCTL_RCGCGPIO_R |= SYSCTL_RCGCGPIO_R5; // PortE clock
+    SYSCTL_RCGCGPIO_R |= SYSCTL_RCGCGPIO_R4; // PortE clock
     UART5_CTL_R = UART5_CTL_R & ~UART_CTL_UARTEN; // Enable UART5
 
     if(baudRate == 9600){
