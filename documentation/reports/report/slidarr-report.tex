@@ -126,7 +126,9 @@ The MIDI standard specifies that C4 has index 60. Hence, note A4 has index 69. T
 $$ f = 440 \times 2^{\frac{n-69}{12}} $$
 
 \subsection{Sound generation}
-A synthesizer has to be used to generate the sound from the MIDI messages. 
+The MIDI signals does nothing on their own. They need to be interpreted by a \textit{sound synthesizer}, or \textit{synth} in short, which uses the MIDI input to control the frequency and characteristics of its audio output. They usually provide an interface for adjusting the parameters, making it possible to generate a wide variety of sounds using the same synth. 
+
+There are countless of free software synths available online that supports MIDI and can be used with the Slidarr, but not every sound is suitable for this instrument. Since it is \textit{monophonic}, i.e. it can only play one note at a time, and is able to slide continously between notes, the synth should preferrably have a soft sound with a constant volume in order to hide the transition between notes when sliding.
 
 \section{Design}
 
