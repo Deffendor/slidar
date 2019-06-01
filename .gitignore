@@ -2,3 +2,5 @@
 *.log
 *.sw*
 .*
+*.toc
+slidarr-report.pdf

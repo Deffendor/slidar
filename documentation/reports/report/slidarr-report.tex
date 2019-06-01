@@ -4,7 +4,7 @@
 \usepackage{siunitx}
 \usepackage{caption}
 
-\newcommand{\source}[1]{\hfill \footnotesize \caption*{Source: {#1}} }
+\newcommand{\source}[1]{\hfill \vspace{-15pt} \caption*{ \footnotesize Source: {#1}} }
 
 \title{\includegraphics[width=0.5\textwidth]{UU_logo.pdf}\\
 Construction of the Slidarr}
@@ -108,8 +108,27 @@ The MIDI message consists of three bytes: the \textit{command} and two \textit{p
   \end{tabular}
 \end{table}
 
+\subsection{Standard music notations and frequencies}
+An \textit{octave} is a frequency interval where the higher note is twice the frequency of the lower note \cite{octave}. In western music, an octave is divided into 12 \textit{semitones}, named C through B, which correspond to a key on a piano. This is the pattern of keys that repeat over the keyboard as shown in \ref{fig:octave}. A piano usually stretches over seven octaves, numbered 1 through 7. A note needs to be identified by not only its name, but also its octave index, e.g. C4.
+
+\begin{figure}[h]
+  \centering
+  \includegraphics[width=0.5\textwidth]{octaves}
+  \caption{Octaves on a piano}
+  \source{https://music.stackexchange.com/questions/69410/what-is-an-octave}
+  \label{fig:octave}
+\end{figure}
+
+Now when octaves, semitones and their relationships have been defined, the final tuning of the piano is left to be decided in order to be able to calculate the frequency of every key of a piano. Typically, the \textit{concert pitch} is used, which specifies that note A4 has a frequency of \SI{440}{\hertz}. All other keys on the piano can be derived from this key.
+
+The MIDI standard specifies that C4 has index 60. Hence, note A4 has index 69. The frequency $f$ for any key $n$ can be calculated using the following formula:
+
+$$ f = 440 \times 2^{\frac{n-69}{12}} $$
+
 \subsection{Sound generation}
-A synthesizer has to be used to generate the sound from the MIDI messages. 
+The MIDI signals does nothing on their own. They need to be interpreted by a \textit{sound synthesizer}, or \textit{synth} in short, which uses the MIDI input to control the frequency and characteristics of its audio output. They usually provide an interface for adjusting the parameters, making it possible to generate a wide variety of sounds using the same synth. 
+
+There are countless of free software synths available online that supports MIDI and can be used with the Slidarr, but not every sound is suitable for this instrument. Since it is \textit{monophonic}, i.e. it can only play one note at a time, and is able to slide continously between notes, the synth should preferrably have a soft sound with a constant volume in order to hide the transition between notes when sliding.
 
 \section{Design}
 
@@ -159,6 +178,14 @@ The MIDI Association,
 \bibitem{midistanford}
 Stanford CCRMA: Essentials of the MIDI protocol,
 \\\texttt{https://ccrma.stanford.edu/~craig/articles/linuxmidi/misc/essenmidi.html}
+
+\bibitem{octave}
+Encyclopedia Britannica: Octave,
+\\texttt{https://www.britannica.com/art/octave-music}
+
+\bibitem{sengpielaudio}
+Sengpiel Audio: Keyboard ad frequencies,
+\\texttt{http://www.sengpielaudio.com/calculator-notenames.htm}
 
 \end{thebibliography}
 \end{document}
