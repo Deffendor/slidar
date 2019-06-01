@@ -143,6 +143,13 @@ image of components/blocks here
 \subsection{System overview}
 For the total system to play music in the end, there are four major parts: the circuit/instrument itself, the microcontroller with its peripherals, the connection to the synthesizer/computer and the synthersizer/computer. See image x.
 
+\begin{figure}[ht]
+  \centering
+  \includegraphics[width=1\textwidth]{BasicSystemOverview.png}
+  \caption{slidarr scetch}
+  \label{fig:slidarr}
+\end{figure}
+
 The microcontroller is an ARM Cortex-M4 (TI TM4C123GH6PM for the prototype) that is running at 16MHz. The connection to the computer or snythesizer is optionally either via a tty to USB converter, Bluetooth directly or a Bluetooth bridge with a USB compatible end device.
 
 \subsection{Peripherals}
