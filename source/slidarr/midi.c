@@ -7,6 +7,7 @@
 #include "midi.h"
 #include "uart.h"
 #include <math.h>
+#include <stdint.h>
 
 void noteOn(int note, int velocity){
     char command = 0x90;
@@ -20,9 +21,13 @@ void noteOn(int note, int velocity){
     UART4Tx(parameterKey);
     UART4Tx(parameterVelocity);
 
-    UART5Tx(command);
-    UART5Tx(parameterKey);
-    UART5Tx(parameterVelocity);
+    uint8_t blu_command = 144;  //144 Decimal same as 0x90 HEX
+    uint8_t blu_note = note;
+    uint8_t blu_velocity = velocity;    //or 127
+
+    UART5Tx(blu_command);
+    UART5Tx(blu_note);
+    UART5Tx(blu_velocity);
 }
 
 void noteOff(int note, int velocity){
@@ -34,9 +39,13 @@ void noteOff(int note, int velocity){
     UART4Tx(parameterKey);
     UART4Tx(parameterVelocity);
 
-    UART5Tx(command);
-    UART5Tx(parameterKey);
-    UART5Tx(parameterVelocity);
+    uint8_t blu_command = 128;  //128 Decimal same as 0x80 HEX
+    uint8_t blu_note = note;
+    uint8_t blu_velocity = velocity;    //or 127
+
+    UART5Tx(blu_command);
+    UART5Tx(blu_note);
+    UART5Tx(blu_velocity);
 }
 
 void pitchbend(int value){
@@ -59,9 +68,13 @@ void pitchbend(int value){
     UART4Tx(parameterLsb);
     UART4Tx(parameterMsb);
 
-    UART5Tx(command);
-    UART5Tx(parameterLsb);
-    UART5Tx(parameterMsb);
+    uint8_t blu_command = 224;  //224 Decimal same as 0xE0 HEX
+    uint8_t blu_parameterLsb = lsbValue;
+    uint8_t blu_parameterMsb = msbValue;
+
+    UART5Tx(blu_command);
+    UART5Tx(blu_parameterLsb);
+    UART5Tx(blu_parameterMsb);
 }
 
 int freqToNote(float freq) {

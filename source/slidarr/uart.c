@@ -115,7 +115,7 @@ char UART5Rx(void){
 }
 
 // transmit one byte
-void UART5Tx(char c){
+void UART5Tx(uint8_t c){
     while((UART5_FR_R & 0x20) != 0);
     UART5_DR_R = c;
 }
