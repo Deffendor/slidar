@@ -190,14 +190,15 @@ The string sensor consists of a \SI{300}{\milli\meter} long copper wire with a d
 
 \section{Implementation}
 
-\subsection{Calibration}
-
-\subsection{Scrolling}
-
-\subsection{Making MIDI continuous}
-
 \subsection{System overview}
 For the total system to play music in the end, there are four major parts: the circuit/instrument itself, the microcontroller with its peripherals, the connection to the synthesizer/computer and the synthersizer/computer. See image x.
+
+\begin{figure}[ht]
+  \centering
+  \includegraphics[width=1\textwidth]{BasicSystemOverview.png}
+  \caption{slidarr overview}
+  \label{fig:slidarr overview}
+\end{figure}
 
 The microcontroller is an ARM Cortex-M4 (TI TM4C123GH6PM for the prototype) that is running at 16MHz. The connection to the computer or snythesizer is optionally either via a tty to USB converter, Bluetooth directly or a Bluetooth bridge with a USB compatible end device.
 
@@ -212,23 +213,39 @@ Three outputs are connected to three LEDs of different colors by using transisto
 
 The UART is used to send out the MIDI bytes to the sound generating device. Only the transmit line is utilized. The receive line stays untouched for the forseeable future because there is no use for it at this stage. The UART is configured for 8 bits with baud rates of 9600, 38400 or 115200 which can be changed in the defaults.h file. The chip has a 16 byte transmit buffer that is implemented into the hardware. This makes it easy to send out multiple bytes (3 bytes for midi messages) putting them into the buffer all at once without having to wait for every single byte to be transmitted, which would block the execution otherwise.
 
+\subsection{Programming model}
+The microcontroller is programmed `bare-metal` so to say. This means there is no use of external libraries and the configuration of the peripherals are all made with the help of the reference manual setting the registers directly. The only thing that is used, is the given header file for the microcontroller.
+
+The code starts initializing most of the used variables on the stack locally in the main function. A defaults header file exists where parameters for the configuration can be changed. Then all the peripherals and the buffer, to keep the history of the ADC values, are initialized. Finally the code enters into a state machine and stays there.
+
 \subsection{The state machine}
--Bare metal, without outside software...
--main loop
--init
--timing
--data filtering, buffer, mean, stddev
--variables, map to appendix
--button debounced
--string state / state machine
--defaults
--midi sending
 
-image of simple state machine
+The state machine runs in an infinite while loop that is controlled by the SysTick timer. The timer can be set at a specified interval given by the defaults. A five milliseconds interval is a good value to use because it gives the processor enough time to do all the calculations and doesn't spam the UART too much while not creating a noticeable delay (respecting the buffer). After the code does all the processing it waits for the SysTick timer to timeout and repeat the process. The waiting is blocking the processor which is intended and doesn't harm the implementation at the current stage.
 
-\subsection{Streaming MIDI}
+There are four states the slidarr is in at any given point in time which are IDLE, SLIDE, SCROLL and CALIBRATE. See image x. There are three LEDs which are turned on when entering the states of SLIDE, SCROLL and CALIBRATE to give the user feedback of the devices state which have the colors green, blue, and red respectively.
+The states are influenced by the following properties: string touched flag, string sliding flag, pitchbend maximum offset, calibration button and scrolling button.
 
-\subsection{Making MIDI continuous}
+\begin{figure}[ht]
+  \centering
+  \includegraphics[width=1\textwidth]{SlidarrStateMachine.png}
+  \caption{Slidarr state machine}
+  \label{fig:slidarr state machine}
+\end{figure}
+
+\subsection{ADC sample buffering}
+The flags of string touched and string sliding are set by a mean and standard deviation calculated from the last n samples from the ADC. The mean and standard deviation filter the sampled values from noise and keep the slidarr from jumping around too much.
+Every read from the ADC is put into a ring buffer of a specified size by the defaults that keeps the history. The size depends on the sample time and noise, but recommended sizes range from 5 to 50 values. Having a large sample time and a big history buffer will result in larger delays and response time.
+
+To set the flags there are treshold values that are compared to the mean and standard deviation to decide the state.
+
+\subsection{Calibration}
+The strings needs to be calibrated to find out at what voltage the string starts and where it ends. To start the calibration the calibration button is pressed without releasing it. Only when both the button and the string is touched will the calibration start. After the string is touch the button can be released. Sliding from the minimum to the maximum or vice versa will find the string base value (min) and the string octave span (min - max). Removing the contact from the string ends the calibration. The area that was slid over represents one octave afterwards.
+
+\subsection{Scrolling}
+While sliding it is possible to change the current octave to a higher or lower one by scrolling. When the scroll button is pressed while sliding it will change the base frequency to a higher or lower depending on the sliding direction.
+
+\subsection{Making MIDI continuous / bitchbending}
+To play a tone with MIDI every note has to be turned on and off manually. In addition to just playing the note it has a frequency offset that is sent by a pitchbend message. To get the sliding effect a note needs to be turned on and depending on the location the offset will need to be set. When sliding this offset changes and has to be continously transmitted. Sliding over to a another note (passing the maximum pitchbend), the old note has to be turned off and the new note be turned on, sending the offset from the point of view of the new note.
 
 \subsection{Wireless Connection}
 \paragraph{}In this project, a Bluetooth module HC-05 is used as a second transmitting device together with USB-TTL device, the advantage of using a wireless connection other than moving the microcontroller around freely within the area of the network, it gives the ability to test the output signal on different software. Also, these two ways of transmitting the MIDI message improved the testing process. 
@@ -248,11 +265,14 @@ The software is periodically checked and if any MIDI note received, the synthesi
 
 In this connection, the Arduino-Micro will receive the MIDI messages from the wireless connection and send it back to the host computer through the serial port (USB). 
 
-\section{Testing and verification}
--with poti
--debugging
+\section{Testing and debugging}
+The Slidarr has been developed in a modular approach, adding the functionalities together one by one, until the end when testing the system as a whole. The system is tested empirically, going through all the use cases, treating the device as a black box.
 
-\section{How to use}
+Using the debugger to view the memory during faulty behaviour was enough to find the bugs and misbehaviour. Instead of using the whole Slidarr hardware (string, circuit, power supply, etc) to test the software, a simple potentiometer with a button connected to the ADC, similar behaviour could be simulated.
+
+Due to the instrument not being used in a safety critical system there is no further need for more advanced testing and verification at this stage of the project.
+
+\section{How to use (for powerpoint and demo, remove this later on)}
 -how to connect
 -make simple tone
 -make calibration
@@ -261,15 +281,17 @@ In this connection, the Arduino-Micro will receive the MIDI messages from the wi
 
 \section{Results}
 
-\subsection{Conclusion Feasability Opinion }
--
+\subsection{Conclusion}
+Being a prototype, the Slidarr is a viable instrument very capable of creating music in the hands of an artist.
 
 \subsection{Future improvements and implementations}
--More modular, ->CMSIS
--multiple strings? make any sense?
--More compact device -> optimal/cheapest microcontroller, battery powered, ...
--Different devices
--
+As the Slidarr proved to be successful, many things can now be done to make Slidarr more accessible to the public and make it a popular instrument one day. These improvements are both on the hardware side and software side.
+
+The code can be made more modular for use on other microcontrollers, for example by converting it to use CMSIS. A more optimal and cost effective microcontroller can be choosen. The current program uses 12KB (out of 256KB) of flash storage and 500 bytes (out of 32KB) of SRAM. In addition the software runs without any problems at 16MHz. This means a much smaller microcontroller could be used for future implementations.
+
+Along with choosing a smaller microcontroller a more visually appealing, compact, and battery powered device can be construted. Using higher precision ADCs and other materials that have other eletric conductivity properties to measure the distance can be researched for use in different instrument variations.
+
+The use of multiple strings controlling e.g. the velocity and volume can be implemented. The type of instrument that can be created after this point is only limited by the imagination of the reader blabla
 
 picture with concepts
 
