@@ -239,7 +239,7 @@ Every read from the ADC is put into a ring buffer of a specified size by the def
 To set the flags there are treshold values that are compared to the mean and standard deviation to decide the state.
 
 \subsection{Calibration}
-The strings needs to be calibrated to find out at what voltage the string starts and where it ends. To start the calibration the calibration button is pressed without releasing it. Only when both the button and the string is touched will the calibration start. After the string is touch the button can be released. Sliding from the minimum to the maximum or vice versa will find the string_base value (minimum) and the string_octave_span (maximum - minimum). Removing the contact to the string ends the calibration. The area that was slid over represents one octave afterwards.
+The strings needs to be calibrated to find out at what voltage the string starts and where it ends. To start the calibration the calibration button is pressed without releasing it. Only when both the button and the string is touched will the calibration start. After the string is touch the button can be released. Sliding from the minimum to the maximum or vice versa will find the string base value (min) and the string octave span (min - max). Removing the contact from the string ends the calibration. The area that was slid over represents one octave afterwards.
 
 \subsection{Scrolling}
 While sliding it is possible to change the current octave to a higher or lower one by scrolling. When the scroll button is pressed while sliding it will change the base frequency to a higher or lower depending on the sliding direction.
