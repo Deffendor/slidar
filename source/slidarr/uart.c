@@ -46,7 +46,7 @@ void initUART(int baudRate) {
     UART4_CC_R = 0; // Select UART4 clock source (internal in this case)
     UART4_LCRH_R = 96; //or 0x60 / 1 stop bit, no FIFO yet to flush buffer, no parity, 8 bit data
 
-    UART4_CTL_R = UART4_CTL_R | UART_CTL_RXE | UART_CTL_TXE; // Enable Tx and Rx
+    UART4_CTL_R = UART4_CTL_R | UART_CTL_TXE; // Enable Tx, for Rx add: | UART_CTL_RXE
     UART4_LCRH_R = UART4_LCRH_R | 0x10; //enable FIFO here
     UART4_CTL_R = UART4_CTL_R | UART_CTL_UARTEN; // Enable UART again
 
@@ -60,7 +60,7 @@ void initUART(int baudRate) {
     // Wireless bridge
     /////////////////////// Setup UART5 //////////////////////////////////
     SYSCTL_RCGCUART_R |= SYSCTL_RCGCUART_R5; // UART5 clock
-    SYSCTL_RCGCGPIO_R |= SYSCTL_RCGCGPIO_R5; // PortE clock
+    SYSCTL_RCGCGPIO_R |= SYSCTL_RCGCGPIO_R4; // PortE clock
     UART5_CTL_R = UART5_CTL_R & ~UART_CTL_UARTEN; // Enable UART5
 
     if(baudRate == 9600){
@@ -80,7 +80,7 @@ void initUART(int baudRate) {
     UART5_CC_R = 0; // Select UART5 clock source (internal in this case)
     UART5_LCRH_R = 96; //or 0x60 / 1 stop bit, no FIFO yet to flush buffer, no parity, 8 bit data
 
-    UART5_CTL_R = UART5_CTL_R | UART_CTL_RXE | UART_CTL_TXE; // Enable Tx and Rx
+    UART5_CTL_R = UART5_CTL_R | UART_CTL_TXE; // Enable Tx, for Rx add: | UART_CTL_RXE
     UART5_LCRH_R = UART5_LCRH_R | 0x10; //enable FIFO here
     UART5_CTL_R = UART5_CTL_R | UART_CTL_UARTEN; // Enable UART again
 
@@ -115,7 +115,7 @@ char UART5Rx(void){
 }
 
 // transmit one byte
-void UART5Tx(char c){
+void UART5Tx(uint8_t c){
     while((UART5_FR_R & 0x20) != 0);
     UART5_DR_R = c;
 }
