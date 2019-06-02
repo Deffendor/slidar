@@ -190,20 +190,14 @@ The string sensor consists of a \SI{300}{\milli\meter} long copper wire with a d
 
 \section{Implementation}
 
-\subsection{Calibration}
-
-\subsection{Scrolling}
-
-\subsection{Making MIDI continuous}
-
 \subsection{System overview}
 For the total system to play music in the end, there are four major parts: the circuit/instrument itself, the microcontroller with its peripherals, the connection to the synthesizer/computer and the synthersizer/computer. See image x.
 
 \begin{figure}[ht]
   \centering
   \includegraphics[width=1\textwidth]{BasicSystemOverview.png}
-  \caption{slidarr scetch}
-  \label{fig:slidarr}
+  \caption{slidarr overview}
+  \label{fig:slidarr overview}
 \end{figure}
 
 The microcontroller is an ARM Cortex-M4 (TI TM4C123GH6PM for the prototype) that is running at 16MHz. The connection to the computer or snythesizer is optionally either via a tty to USB converter, Bluetooth directly or a Bluetooth bridge with a USB compatible end device.
@@ -219,29 +213,50 @@ Three outputs are connected to three LEDs of different colors by using transisto
 
 The UART is used to send out the MIDI bytes to the sound generating device. Only the transmit line is utilized. The receive line stays untouched for the forseeable future because there is no use for it at this stage. The UART is configured for 8 bits with baud rates of 9600, 38400 or 115200 which can be changed in the defaults.h file. The chip has a 16 byte transmit buffer that is implemented into the hardware. This makes it easy to send out multiple bytes (3 bytes for midi messages) putting them into the buffer all at once without having to wait for every single byte to be transmitted, which would block the execution otherwise.
 
-\subsection{The state machine}
--Bare metal, without outside software...
--main loop
--init
--timing
--data filtering, buffer, mean, stddev
--variables, map to appendix
--button debounced
--string state / state machine
--defaults
--midi sending
+\subsection{Programming model}
+The microcontroller is programmed `bare-metal` so to say. This means there is no use of external libraries and the configuration of the peripherals are all made with the help of the reference manual setting the registers directly. The only thing that is used, is the given header file for the microcontroller.
 
-image of simple state machine
+The code starts initializing most of the used variables on the stack locally in the main function. A defaults header file exists where parameters for the configuration can be changed. Then all the peripherals and the buffer, to keep the history of the ADC values, are initialized. Finally the code enters into a state machine and stays there.
+
+\subsection{The state machine}
+
+The state machine runs in an infinite while loop that is controlled by the SysTick timer. The timer can be set at a specified interval given by the defaults. A five milliseconds interval is a good value to use because it gives the processor enough time to do all the calculations and doesn't spam the UART too much while not creating a noticeable delay (respecting the buffer). After the code does all the processing it waits for the SysTick timer to timeout and repeat the process. The waiting is blocking the processor which is intended and doesn't harm the implementation at the current stage.
+
+There are four states the slidarr is in at any given point in time which are IDLE, SLIDE, SCROLL and CALIBRATE. See image x. There are three LEDs which are turned on when entering the states of SLIDE, SCROLL and CALIBRATE to give the user feedback of the devices state which have the colors green, blue, and red respectively.
+The states are influenced by the following properties: string touched flag, string sliding flag, pitchbend maximum offset, calibration button and scrolling button.
+
+\begin{figure}[ht]
+  \centering
+  \includegraphics[width=1\textwidth]{SlidarrStateMachine.png}
+  \caption{Slidarr state machine}
+  \label{fig:slidarr state machine}
+\end{figure}
+
+\subsection{ADC sample buffering}
+The flags of string touched and string sliding are set by a mean and standard deviation calculated from the last n samples from the ADC. The mean and standard deviation filter the sampled values from noise and keep the slidarr from jumping around too much.
+Every read from the ADC is put into a ring buffer of a specified size by the defaults that keeps the history. The size depends on the sample time and noise, but recommended sizes range from 5 to 50 values. Having a large sample time and a big history buffer will result in larger delays and response time.
+
+To set the flags there are treshold values that are compared to the mean and standard deviation to decide the state.
+
+
+\subsection{Calibration}
+
+\subsection{Scrolling}
+
+\subsection{Making MIDI continuous / bitchbending}
 
 \subsection{Streaming MIDI}
 
-\subsection{Making MIDI continuous}
+-variables, map to appendix
+-button debounced
+-midi sending
 
 \subsection{Wireless bridge}
 
 \section{Testing and verification}
 -with poti
 -debugging
+-...testing
 
 \section{How to use}
 -how to connect
@@ -260,7 +275,7 @@ image of simple state machine
 -multiple strings? make any sense?
 -More compact device -> optimal/cheapest microcontroller, battery powered, ...
 -Different devices
--
+-String material
 
 picture with concepts
 
