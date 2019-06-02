@@ -238,27 +238,25 @@ Every read from the ADC is put into a ring buffer of a specified size by the def
 
 To set the flags there are treshold values that are compared to the mean and standard deviation to decide the state.
 
-
 \subsection{Calibration}
+The strings needs to be calibrated to find out at what voltage the string starts and where it ends. To start the calibration the calibration button is pressed without releasing it. Only when both the button and the string is touched will the calibration start. After the string is touch the button can be released. Sliding from the minimum to the maximum or vice versa will find the string_base value (minimum) and the string_octave_span (maximum - minimum). Removing the contact to the string ends the calibration. The area that was slid over represents one octave afterwards.
 
 \subsection{Scrolling}
+While sliding it is possible to change the current octave to a higher or lower one by scrolling. When the scroll button is pressed while sliding it will change the base frequency to a higher or lower depending on the sliding direction.
 
 \subsection{Making MIDI continuous / bitchbending}
-
-\subsection{Streaming MIDI}
-
--variables, map to appendix
--button debounced
--midi sending
+To play a tone with MIDI every note has to be turned on and off manually. In addition to just playing the note it has a frequency offset that is sent by a pitchbend message. To get the sliding effect a note needs to be turned on and depending on the location the offset will need to be set. When sliding this offset changes and has to be continously transmitted. Sliding over to a another note (passing the maximum pitchbend), the old note has to be turned off and the new note be turned on, sending the offset from the point of view of the new note.
 
 \subsection{Wireless bridge}
 
-\section{Testing and verification}
--with poti
--debugging
--...testing
+\section{Testing and debugging}
+The Slidarr has been developed in a modular approach, adding the functionalities together one by one, until the end when testing the system as a whole. The system is tested empirically, going through all the use cases, treating the device as a black box.
 
-\section{How to use}
+Using the debugger to view the memory during faulty behaviour was enough to find the bugs and misbehaviour. Instead of using the whole Slidarr hardware (string, circuit, power supply, etc) to test the software, a simple potentiometer with a button connected to the ADC, similar behaviour could be simulated.
+
+Due to the instrument not being used in a safety critical system there is no further need for more advanced testing and verification at this stage of the project.
+
+\section{How to use (for powerpoint and demo, remove this later on)}
 -how to connect
 -make simple tone
 -make calibration
@@ -267,15 +265,17 @@ To set the flags there are treshold values that are compared to the mean and sta
 
 \section{Results}
 
-\subsection{Conclusion Feasability Opinion }
--
+\subsection{Conclusion}
+Being a prototype, the Slidarr is a viable instrument very capable of creating music in the hands of an artist.
 
 \subsection{Future improvements and implementations}
--More modular, ->CMSIS
--multiple strings? make any sense?
--More compact device -> optimal/cheapest microcontroller, battery powered, ...
--Different devices
--String material
+As the Slidarr proved to be successful, many things can now be done to make Slidarr more accessible to the public and make it a popular instrument one day. These improvements are both on the hardware side and software side.
+
+The code can be made more modular for use on other microcontrollers, for example by converting it to use CMSIS. A more optimal and cost effective microcontroller can be choosen. The current program uses 12KB (out of 256KB) of flash storage and 500 bytes (out of 32KB) of SRAM. In addition the software runs without any problems at 16MHz. This means a much smaller microcontroller could be used for future implementations.
+
+Along with choosing a smaller microcontroller a more visually appealing, compact, and battery powered device can be construted. Using higher precision ADCs and other materials that have other eletric conductivity properties to measure the distance can be researched for use in different instrument variations.
+
+The use of multiple strings controlling e.g. the velocity and volume can be implemented. The type of instrument that can be created after this point is only limited by the imagination of the reader blabla
 
 picture with concepts
 
