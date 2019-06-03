@@ -94,9 +94,9 @@ This can be done in many different ways. One way is using a resistor bridge setu
 
 \begin{figure}[ht]
   \centering
-  \includegraphics[width=0.5\textwidth]{4-wire-sensing}
+  \includegraphics[width=0.5\textwidth]{Kelvin_Connections}
   \caption{4-terminal measurement}
-  \source{allaboutcircuits.com}
+  \source{escomponents.com}
   \label{fig:4terminal}
 \end{figure}
 
@@ -153,13 +153,12 @@ The MIDI signals does nothing on their own. They need to be interpreted by a \te
 
 There are countless of free software synths available online that supports MIDI and can be used with the Slidarr, but not every sound is suitable for this instrument. Since it is \textit{monophonic}, i.e. it can only play one note at a time, and is able to slide continously between notes, the synth should preferrably have a soft sound with a constant volume in order to hide the transition between notes when sliding.
 
-\section{Design}
+\section{Hardware design}
 
-\subsection{Hardware}
 
 The hardware can be divided into three parts: the \textit{string sensor}, i.e. the string and the conductor; the \textit{positioning unit}, and the microcontroller.
 
-\subsubsection{Positioning unit}
+\subsection{Positioning unit}
 The positioning unit contains the constant current regulator and the instrumentation amplifier, as described in section \ref{sec:resistance_measurement}. An LM317 voltage regulator is set up to feed a constant current through the string. The current $I$ is determined by resistor $R2$ \cite{lm317}:
 
 $$ I = \frac{1.25}{R_2} $$
@@ -197,7 +196,7 @@ The TS464 is a chip with four integrated op-amps. Figure \ref{fig:slidarr-circui
   \label{fig:slidarr-circuit2}
 \end{figure}
 
-\subsubsection{String sensor}
+\subsection{String sensor}
 The string sensor consists of a \SI{300}{\milli\meter} long copper wire with a diameter of \SI{0.5}{\milli\meter}, stretched between two screws on a wooden plank (see figure \ref{fig:string_sensor}.  The user wears a conductive copper C-shaped ring on one of its fingers, which will be used to make contact with the string. The C-shape makes it possible to bend the ring to a perfect fit for the user. The voltage difference can then be measured between the ring and one end of the string. The string sensor can be though of as a simple potentiometer, marked SLIDARR in figure \ref{fig:slidarr-circuit}.
 
 \begin{figure}[h]
@@ -207,9 +206,7 @@ The string sensor consists of a \SI{300}{\milli\meter} long copper wire with a d
   \label{fig:string_sensor}
 \end{figure}
 
-\subsubsection{Power supply}
-
-\subsubsection{Microcontroller}
+\subsection{Microcontroller}
 The micocontroller used is TI EK-TM4C123GXL is the same as TM4C123GH6PM. The software where used in this project is Code Composer Studio IDE to compile and debugging the code, primarily in C.
 
 \section{Implementation}
