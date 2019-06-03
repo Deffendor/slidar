@@ -43,7 +43,7 @@ When sliding while touching the so called slide happens, which changes the frequ
 
 To change the current octave to another location on the keyboard a scroll is possible. While touching the Slidarr, holding down the scroll button and then sliding in a desired direction the `window` of the current frequency range slides to the left or right of the total scale.
 
-\begin{figure}[ht]
+\begin{figure}[h]
   \centering
   \includegraphics[width=1\textwidth]{slidar_illustration}
   \caption{How the Slidarr maps onto a piano.}
@@ -92,7 +92,7 @@ A copper wire of length 1 meter and diameter of \SI{0.5}{mm} has a resistance of
 
 This can be done in many different ways. One way is using a resistor bridge setup, e.g. a Wheatstone or Kelvin bridge, which is able to sense tiny changes in resistance. However, the bridge needs to be balanced with accurate resistors of similar value of the measured resistor, which is hard to achieve with standard resistors when the measured resistance is this small.
 
-\begin{figure}[ht]
+\begin{figure}[h]
   \centering
   \includegraphics[width=0.5\textwidth]{Kelvin_Connections}
   \caption{4-terminal measurement}
@@ -191,7 +191,7 @@ The TS464 is a chip with four integrated op-amps. Figure \ref{fig:slidarr-circui
 
 \begin{figure}[h]
   \centering
-  \includegraphics[width=0.9\textwidth]{slidarr-circuit2}
+  \includegraphics[width=0.7\textwidth]{slidarr-circuit2}
   \caption{The positioning unit using a TS464 quad-op-amp.}
   \label{fig:slidarr-circuit2}
 \end{figure}
@@ -214,7 +214,7 @@ The micocontroller used is TI EK-TM4C123GXL is the same as TM4C123GH6PM. The sof
 \subsection{System overview}
 For the total system to play music in the end, there are four major parts: the circuit/instrument itself, the microcontroller with its peripherals, the connection to the synthesizer/computer and the synthersizer/computer. See image x.
 
-\begin{figure}[ht]
+\begin{figure}[h]
   \centering
   \includegraphics[width=1\textwidth]{BasicSystemOverview.png}
   \caption{slidarr overview}
@@ -246,7 +246,7 @@ The state machine runs in an infinite while loop that is controlled by the SysTi
 There are four states the slidarr is in at any given point in time which are IDLE, SLIDE, SCROLL and CALIBRATE. See image x. There are three LEDs which are turned on when entering the states of SLIDE, SCROLL and CALIBRATE to give the user feedback of the devices state which have the colors green, blue, and red respectively.
 The states are influenced by the following properties: string touched flag, string sliding flag, pitchbend maximum offset, calibration button and scrolling button.
 
-\begin{figure}[ht]
+\begin{figure}[h]
   \centering
   \includegraphics[width=1\textwidth]{SlidarrStateMachine.png}
   \caption{Slidarr state machine}
