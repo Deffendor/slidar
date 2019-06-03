@@ -3,7 +3,11 @@
 \usepackage{graphicx}
 \usepackage{siunitx}
 \usepackage{caption}
+<<<<<<< HEAD
 \usepackage{appendix}
+=======
+\usepackage{subcaption}
+>>>>>>> master
 
 \newcommand{\source}[1]{\hfill \vspace{-15pt} \caption*{ \footnotesize Source: {#1}} }
 
@@ -37,44 +41,66 @@ The focus for this proof of concept lies on the electronic hardware and software
 
 The slidarr string represents a part of the traditional piano keyboard. Touching and releasing the Slidarr on the string has the same effect as pressing and releasing a piano key. The location is determined by the developed embedded system and sent to a synthesizer where the tone is generated/played. In addition to touching and releasing, it is also possible to slide on the point to the left or right, thus the name `Slidarr`. This has the effect of bending the pitch of the tone and jumping seamlessly to the next key/tone. 
 
-The instrument needs to be calibrated before played to know the minimum and maxiumum resistance range of the wire. After that the calibrated range is mapped to one octave on the keyboard. After starting or resetting, the Slidarr usually starts in the middle of the keyboard which is a C4 with a frequency of 261 up to the next octave.
+The instrument needs to be calibrated before played to know the minimum and maxiumum resistance range of the wire. After that the calibrated range is mapped to one octave on the keyboard. After starting or resetting, the Slidarr usually starts in the middle of the keyboard which is a C4 with a frequency of \SI{261}{\hertz} up to the next octave.
 
-When sliding while touching the so called slide happens, which changes the frequency of the tone itself and sending pitchbend messages to the synthesizer. After the pitch is on the maximum possible the software will turn the tone off and switch to the next tone.
+When sliding while touching the so called slide happens, which changes the frequency of the tone itself and sending pitchbend messages to the synthesizer. After the pitchbend is on the maximum possible the software will turn the tone off and switch to the next tone.
 
-To change the current octave to another location on the keyboard a scroll is possible. While touching the slidarr, holding down the scroll button and then sliding in a desired direction the `window` of the current range slides to the left or right of the total scale.
+To change the current octave to another location on the keyboard a scroll is possible. While touching the Slidarr, holding down the scroll button and then sliding in a desired direction the `window` of the current frequency range slides to the left or right of the total scale.
 
-picture here of string compared to keyboard
-
-\begin{figure}[ht]
+\begin{figure}[h]
   \centering
-  \includegraphics[width=1\textwidth]{slidarr_2_.jpg}
-  \caption{slidarr scetch}
+  \includegraphics[width=1\textwidth]{slidar_illustration}
+  \caption{How the Slidarr maps onto a piano.}
   \label{fig:slidarr}
 \end{figure}
 
-Blabla blabla bla.
-
-To sum it up these are the major functionalities of the Slidarr and important to know:
+To sum it up these are the major functionalities of the Slidarr:
 \begin{itemize}
  \item Touching, turn specific note on
- \item Sliding, changing the pitch and jumping to another tone
- \item Calibrating, setting the minimum and maximum range on the hardware for one octave
+ \item Sliding, changing the pitchbend and switching to another tone
+ \item Calibrating, defining the range of the string that correspond to one octave
  \item Scrolling, moving the octave on the keyboard to higher or lower tones
 \end{itemize}
 
-
 \section{Analysis}
+The initial idea of the Slidarr was to use a pair of strings and let the user's finger create contact between them, as shown in figure \ref{fig:slidarr_initial_sketch}. This turned out to be easy in theory, but much harder in practice. By measuring the resistance between points A-E and A-C, both the finger's position and its contact resistance can be calculated. But since the resistance in the finer is measured in the \SI{100}{\kilo\ohm}s and the string is only on the the \si{\milli\ohm} scale, it is very hard to get accurate measurements since both values are measured in the same measurement. This is beyond our electronics skills.
+
+\begin{figure}[h]
+  \centering
+  \begin{subfigure}[b]{0.45\textwidth}
+    \includegraphics[width=\textwidth]{slidar_initial}
+    \caption{Two strings touched by a bare finger.}
+    \label{fig:slidarr_initial_sketch}
+  \end{subfigure}
+  ~
+  \begin{subfigure}[b]{0.45\textwidth}
+    \includegraphics[width=\textwidth]{slidar_initial_circuit}
+    \caption{The strings and finger as a circuit of resistors.}
+    \label{fig:slidarr_initial_circuit}
+  \end{subfigure}
+  \caption{The initial idea of the Slidarr.}
+  \label{fig:slidarr_initial}
+\end{figure}
+
+Instead, a simpler solution is to use a single wire and let the user wear a conductor as shown in figure \ref{fig:slidarr_final_concept}. If the total reisistance of the string is known, the position of the finger can be calculated after measuring the resistance between the finger and one end of the string.
+
+\begin{figure}[h]
+  \centering
+  \includegraphics[width=0.5\textwidth]{slidarr_final_concept}
+  \caption{Final concept.}
+  \label{fig:slidarr_final_concept}
+\end{figure}
 
 \subsection{Resistance measurement} \label{sec:resistance_measurement}
-One way of determining the finger's position of the string is to measure the resistance from one end of the string to the finger. A copper wire of length 1 meter and diameter of \SI{0.5}{mm} has a resistance of \SI{0.5}{\ohm} per meter \cite{copperresistance}. In order to track the position  with millimeter accuracy, we need to measure in the sub-\si{\milli\ohm} range. 
+A copper wire of length 1 meter and diameter of \SI{0.5}{mm} has a resistance of \SI{0.5}{\ohm} per meter \cite{copperresistance}. In order to track the position  with millimeter accuracy, we need to measure in the sub-\si{\milli\ohm} range. 
 
 This can be done in many different ways. One way is using a resistor bridge setup, e.g. a Wheatstone or Kelvin bridge, which is able to sense tiny changes in resistance. However, the bridge needs to be balanced with accurate resistors of similar value of the measured resistor, which is hard to achieve with standard resistors when the measured resistance is this small.
 
-\begin{figure}[ht]
+\begin{figure}[h]
   \centering
-  \includegraphics[width=0.5\textwidth]{4-wire-sensing}
+  \includegraphics[width=0.5\textwidth]{Kelvin_Connections}
   \caption{4-terminal measurement}
-  \source{allaboutcircuits.com}
+  \source{escomponents.com}
   \label{fig:4terminal}
 \end{figure}
 
@@ -131,13 +157,12 @@ The MIDI signals does nothing on their own. They need to be interpreted by a \te
 
 There are countless of free software synths available online that supports MIDI and can be used with the Slidarr, but not every sound is suitable for this instrument. Since it is \textit{monophonic}, i.e. it can only play one note at a time, and is able to slide continously between notes, the synth should preferrably have a soft sound with a constant volume in order to hide the transition between notes when sliding.
 
-\section{Design}
+\section{Hardware design}
 
-\subsection{Hardware}
 
 The hardware can be divided into three parts: the \textit{string sensor}, i.e. the string and the conductor; the \textit{positioning unit}, and the microcontroller.
 
-\subsubsection{Positioning unit}
+\subsection{Positioning unit}
 The positioning unit contains the constant current regulator and the instrumentation amplifier, as described in section \ref{sec:resistance_measurement}. An LM317 voltage regulator is set up to feed a constant current through the string. The current $I$ is determined by resistor $R2$ \cite{lm317}:
 
 $$ I = \frac{1.25}{R_2} $$
@@ -170,12 +195,12 @@ The TS464 is a chip with four integrated op-amps. Figure \ref{fig:slidarr-circui
 
 \begin{figure}[h]
   \centering
-  \includegraphics[width=0.9\textwidth]{slidarr-circuit2}
+  \includegraphics[width=0.7\textwidth]{slidarr-circuit2}
   \caption{The positioning unit using a TS464 quad-op-amp.}
   \label{fig:slidarr-circuit2}
 \end{figure}
 
-\subsubsection{String sensor}
+\subsection{String sensor}
 The string sensor consists of a \SI{300}{\milli\meter} long copper wire with a diameter of \SI{0.5}{\milli\meter}, stretched between two screws on a wooden plank (see figure \ref{fig:string_sensor}.  The user wears a conductive copper C-shaped ring on one of its fingers, which will be used to make contact with the string. The C-shape makes it possible to bend the ring to a perfect fit for the user. The voltage difference can then be measured between the ring and one end of the string. The string sensor can be though of as a simple potentiometer, marked SLIDARR in figure \ref{fig:slidarr-circuit}.
 
 \begin{figure}[h]
@@ -185,16 +210,15 @@ The string sensor consists of a \SI{300}{\milli\meter} long copper wire with a d
   \label{fig:string_sensor}
 \end{figure}
 
-\subsubsection{Power supply}
-
-\subsubsection{Microcontroller}
+\subsection{Microcontroller}
+The micocontroller used is TI EK-TM4C123GXL is the same as TM4C123GH6PM. The software where used in this project is Code Composer Studio IDE to compile and debugging the code, primarily in C.
 
 \section{Implementation}
 
 \subsection{System overview}
 For the total system to play music in the end, there are four major parts: the circuit/instrument itself, the microcontroller with its peripherals, the connection to the synthesizer/computer and the synthersizer/computer. See image x.
 
-\begin{figure}[ht]
+\begin{figure}[h]
   \centering
   \includegraphics[width=1\textwidth]{BasicSystemOverview.png}
   \caption{slidarr overview}
@@ -226,7 +250,7 @@ The state machine runs in an infinite while loop that is controlled by the SysTi
 There are four states the slidarr is in at any given point in time which are IDLE, SLIDE, SCROLL and CALIBRATE. See image x. There are three LEDs which are turned on when entering the states of SLIDE, SCROLL and CALIBRATE to give the user feedback of the devices state which have the colors green, blue, and red respectively.
 The states are influenced by the following properties: string touched flag, string sliding flag, pitchbend maximum offset, calibration button and scrolling button.
 
-\begin{figure}[ht]
+\begin{figure}[h]
   \centering
   \includegraphics[width=1\textwidth]{SlidarrStateMachine.png}
   \caption{Slidarr state machine}
@@ -248,21 +272,22 @@ While sliding it is possible to change the current octave to a higher or lower o
 \subsection{Making MIDI continuous / bitchbending}
 To play a tone with MIDI every note has to be turned on and off manually. In addition to just playing the note it has a frequency offset that is sent by a pitchbend message. To get the sliding effect a note needs to be turned on and depending on the location the offset will need to be set. When sliding this offset changes and has to be continously transmitted. Sliding over to a another note (passing the maximum pitchbend), the old note has to be turned off and the new note be turned on, sending the offset from the point of view of the new note.
 
-\subsection{Wireless Connection}
-\paragraph{}In this project, a Bluetooth module HC-05 is used as a second transmitting device together with USB-TTL device, the advantage of using a wireless connection other than moving the microcontroller around freely within the area of the network, it gives the ability to test the output signal on different software. Also, these two ways of transmitting the MIDI message improved the testing process. 
+\subsection{Wireless connection}
+In this project, a Bluetooth module HC-05 is used as a second transmitting device together with USB-TTL device, the advantage of using a wireless connection other than moving the microcontroller around freely within the area of the network, it gives the ability to test the output signal on different software. Also, these two ways of transmitting the MIDI message improved the testing process. 
 
 The Bluetooth module HC-05, it operates on 5 V, supports Bluetooth 2.0 and communicates via UART. Both Bluetooth modules have configured at baud rate from default 9600 to 115200 by AT command mode, as well as one of the module configured as master (it only connect to the slave module) and other one left as a slave.
 
 There are two ways of sending MIDI note from TM4C microcontroller, one way is through a direct connection between the microcontroller with Bluetooth module and the host computer that support Bluetooth connection (paired Bluetooth device). The second alternative way is preferable as this actually not involve any third-party software in the host computer, through a wireless bridge link between the TM4C microcontroller and Arduino-Micro microcontroller together by using master and slave Bluetooth module. Both methods of implementation are briefly explained in details.
-\subsubsection{Direct Bluetooth Connection}
-\paragraph{}A Bluetooth slave connected with the microcontroller and after the pairing process in the host computer (pairing only made once) than Bluetooth Led state change from blink every second to stop blinking. The host computer will act as a central hub, and it is as simple as a two-click process.
 
-In this connection, two software required LoopMIDI [7] and the Hairless MIDI [8] together. The LoopMIDI software created a virtual loopback MIDI-ports that can be recognized in synthesizer software, while the Hairless MIDI change the serial port over Bluetooth link to a MIDI output which is the created port in LoopMIDI software. 
+\subsubsection{Direct Bluetooth connection}
+A Bluetooth slave connected with the microcontroller and after the pairing process in the host computer (pairing only made once) than Bluetooth Led state change from blink every second to stop blinking. The host computer will act as a central hub, and it is as simple as a two-click process.
+
+In this connection, two software required LoopMIDI \cite{loopmidi} and the Hairless MIDI \cite{hairlessmidiserial} together. The LoopMIDI software created a virtual loopback MIDI-ports that can be recognized in synthesizer software, while the Hairless MIDI change the serial port over Bluetooth link to a MIDI output which is the created port in LoopMIDI software. 
 
 The software is periodically checked and if any MIDI note received, the synthesizer will generate audio signals.
 
-\subsubsection{Wireless Bridge Connection}
-\paragraph{}A Bluetooth slave and master connected to the TM4C and Arduino-Micro microcontroller respectively. Arduino-Micro and few other Arduino are supported because it has HID (Human Interface Devices) capability, this microcontroller used because it supports MIDIUSB library [9] that allows the transmitted message to be easily recognized by any synthesizer software, unlike the the first way which used third-party software in the host computer. The two Bluetooth modules will connect to each other as long as the signal is not out of range, and it is a plug-and-play process.
+\subsubsection{Wireless bridge connection}
+A Bluetooth slave and master connected to the TM4C and Arduino-Micro microcontroller respectively. Arduino-Micro and few other Arduino are supported because it has HID (Human Interface Devices) capability, this microcontroller used because it supports MIDIUSB library \cite{arduinolibraries} that allows the transmitted message to be easily recognized by any synthesizer software, unlike the first way which used third-party software in the host computer. The two Bluetooth modules will connect to each other as long as the signal is not out of range, and it is a plug-and-play process.
 
 In this connection, the Arduino-Micro will receive the MIDI messages from the wireless connection and send it back to the host computer through the serial port (USB). 
 
@@ -277,6 +302,9 @@ Due to the instrument not being used in a safety critical system there is no fur
 
 \subsection{Conclusion}
 Being a prototype, the Slidarr is a viable instrument very capable of creating music in the hands of an artist.
+
+In conclusion, this project shows that a MIDI signal generated from the string is indeed very possible.
+The project works pretty well, and it's ready to test it on a real guitar or any musical instruments. However, the end result was quite satisfactory as it transmits MIDI note from the string to synthesizer software.
 
 \subsection{Future improvements and implementations}
 As the Slidarr proved to be successful, many things can now be done to make Slidarr more accessible to the public and make it a popular instrument one day. These improvements are both on the hardware side and software side.
@@ -295,6 +323,13 @@ picture with concepts
   \caption{Slidarr variations}
   \label{fig:slidarr variations}
 \end{figure}
+---
+
+Another way to expand the system is by adding extra more strings controlling on the system, for instance: a string to control the MIDI note that corresponds to velocity and volume can be implemented,  by adding new string this will give the ability to control better the MIDI note and variety of sound could be generated. 
+
+In addition, by powering the microcontroller with the battery will make the project a fully portable device. And by adding a relay aim to reduce the battery power consumption by implementing a sleep mode e.g. if the string is not touched for a certain period of time it goes to turn off state and turned back to on state if the string is touch. This would lead to an increase in the standby lifetime of the power source.
+
+Although the hardware implementation of the project design is completed just extra things that could improve the received signal. Therefore we could move from breadboard to PCB prototype, also come up with a 3D printing enclosure for it as well.
 
 \newpage
 \begin{thebibliography}{9}
@@ -331,11 +366,11 @@ LEDnique: LM317 constant-current power supply,
 Virtual loopback MIDI software,
 \\\texttt{https://www.tobias-erichsen.de/software/loopmidi.html}
 
-\bibitem{sengpielaudio}
+\bibitem{hairlessmidiserial}
 The Hairless MIDI Serial Bridge Software,
 \\\texttt{https://projectgus.github.io/hairless-midiserial/}
 
-\bibitem{sengpielaudio}
+\bibitem{arduinolibraries}
 Arduino Libraries: MIDIUSB library over USB,
 \\\texttt{https://github.com/arduino-libraries/MIDIUSB}
 
