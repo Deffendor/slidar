@@ -187,6 +187,7 @@ The string sensor consists of a \SI{300}{\milli\meter} long copper wire with a d
 \subsubsection{Power supply}
 
 \subsubsection{Microcontroller}
+The micocontroller used is TI EK-TM4C123GXL is the same as TM4C123GH6PM. The software where used in this project is Code Composer Studio IDE to compile and debugging the code, primarily in C.
 
 \section{Implementation}
 
@@ -247,21 +248,21 @@ While sliding it is possible to change the current octave to a higher or lower o
 \subsection{Making MIDI continuous / bitchbending}
 To play a tone with MIDI every note has to be turned on and off manually. In addition to just playing the note it has a frequency offset that is sent by a pitchbend message. To get the sliding effect a note needs to be turned on and depending on the location the offset will need to be set. When sliding this offset changes and has to be continously transmitted. Sliding over to a another note (passing the maximum pitchbend), the old note has to be turned off and the new note be turned on, sending the offset from the point of view of the new note.
 
-\subsection{Wireless Connection}
+\subsection{Wireless connection}
 \paragraph{}In this project, a Bluetooth module HC-05 is used as a second transmitting device together with USB-TTL device, the advantage of using a wireless connection other than moving the microcontroller around freely within the area of the network, it gives the ability to test the output signal on different software. Also, these two ways of transmitting the MIDI message improved the testing process. 
 
 The Bluetooth module HC-05, it operates on 5 V, supports Bluetooth 2.0 and communicates via UART. Both Bluetooth modules have configured at baud rate from default 9600 to 115200 by AT command mode, as well as one of the module configured as master (it only connect to the slave module) and other one left as a slave.
 
 There are two ways of sending MIDI note from TM4C microcontroller, one way is through a direct connection between the microcontroller with Bluetooth module and the host computer that support Bluetooth connection (paired Bluetooth device). The second alternative way is preferable as this actually not involve any third-party software in the host computer, through a wireless bridge link between the TM4C microcontroller and Arduino-Micro microcontroller together by using master and slave Bluetooth module. Both methods of implementation are briefly explained in details.
-\subsubsection{Direct Bluetooth Connection}
+\subsubsection{Direct Bluetooth connection}
 \paragraph{}A Bluetooth slave connected with the microcontroller and after the pairing process in the host computer (pairing only made once) than Bluetooth Led state change from blink every second to stop blinking. The host computer will act as a central hub, and it is as simple as a two-click process.
 
 In this connection, two software required LoopMIDI \cite{loopmidi} and the Hairless MIDI \cite{hairlessmidiserial} together. The LoopMIDI software created a virtual loopback MIDI-ports that can be recognized in synthesizer software, while the Hairless MIDI change the serial port over Bluetooth link to a MIDI output which is the created port in LoopMIDI software. 
 
 The software is periodically checked and if any MIDI note received, the synthesizer will generate audio signals.
 
-\subsubsection{Wireless Bridge Connection}
-\paragraph{}A Bluetooth slave and master connected to the TM4C and Arduino-Micro microcontroller respectively. Arduino-Micro and few other Arduino are supported because it has HID (Human Interface Devices) capability, this microcontroller used because it supports MIDIUSB library \cite{arduinolibraries} that allows the transmitted message to be easily recognized by any synthesizer software, unlike the the first way which used third-party software in the host computer. The two Bluetooth modules will connect to each other as long as the signal is not out of range, and it is a plug-and-play process.
+\subsubsection{Wireless bridge connection}
+\paragraph{}A Bluetooth slave and master connected to the TM4C and Arduino-Micro microcontroller respectively. Arduino-Micro and few other Arduino are supported because it has HID (Human Interface Devices) capability, this microcontroller used because it supports MIDIUSB library \cite{arduinolibraries} that allows the transmitted message to be easily recognized by any synthesizer software, unlike the first way which used third-party software in the host computer. The two Bluetooth modules will connect to each other as long as the signal is not out of range, and it is a plug-and-play process.
 
 In this connection, the Arduino-Micro will receive the MIDI messages from the wireless connection and send it back to the host computer through the serial port (USB). 
 
@@ -304,7 +305,7 @@ Another way to expand the system is by adding extra more strings controlling on 
 
 In addition, by powering the microcontroller with the battery will make the project a fully portable device. And by adding a relay aim to reduce the battery power consumption by implementing a sleep mode e.g. if the string is not touched for a certain period of time it goes to turn off state and turned back to on state if the string is touch. This would lead to an increase in the standby lifetime of the power source.
 
-Although the hardware implementation of the project design is completed just extra things that could improve the received signal. Therefore we could move from breadboard to PCB prototype, also come up with a 3D printing encloser for it as well.
+Although the hardware implementation of the project design is completed just extra things that could improve the received signal. Therefore we could move from breadboard to PCB prototype, also come up with a 3D printing enclosure for it as well.
 
 \newpage
 \begin{thebibliography}{9}
