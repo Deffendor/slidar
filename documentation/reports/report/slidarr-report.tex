@@ -256,12 +256,12 @@ There are two ways of sending MIDI note from TM4C microcontroller, one way is th
 \subsubsection{Direct Bluetooth Connection}
 \paragraph{}A Bluetooth slave connected with the microcontroller and after the pairing process in the host computer (pairing only made once) than Bluetooth Led state change from blink every second to stop blinking. The host computer will act as a central hub, and it is as simple as a two-click process.
 
-In this connection, two software required LoopMIDI [7] and the Hairless MIDI [8] together. The LoopMIDI software created a virtual loopback MIDI-ports that can be recognized in synthesizer software, while the Hairless MIDI change the serial port over Bluetooth link to a MIDI output which is the created port in LoopMIDI software. 
+In this connection, two software required LoopMIDI \cite{loopmidi} and the Hairless MIDI \cite{hairlessmidiserial} together. The LoopMIDI software created a virtual loopback MIDI-ports that can be recognized in synthesizer software, while the Hairless MIDI change the serial port over Bluetooth link to a MIDI output which is the created port in LoopMIDI software. 
 
 The software is periodically checked and if any MIDI note received, the synthesizer will generate audio signals.
 
 \subsubsection{Wireless Bridge Connection}
-\paragraph{}A Bluetooth slave and master connected to the TM4C and Arduino-Micro microcontroller respectively. Arduino-Micro and few other Arduino are supported because it has HID (Human Interface Devices) capability, this microcontroller used because it supports MIDIUSB library [9] that allows the transmitted message to be easily recognized by any synthesizer software, unlike the the first way which used third-party software in the host computer. The two Bluetooth modules will connect to each other as long as the signal is not out of range, and it is a plug-and-play process.
+\paragraph{}A Bluetooth slave and master connected to the TM4C and Arduino-Micro microcontroller respectively. Arduino-Micro and few other Arduino are supported because it has HID (Human Interface Devices) capability, this microcontroller used because it supports MIDIUSB library \cite{arduinolibraries} that allows the transmitted message to be easily recognized by any synthesizer software, unlike the the first way which used third-party software in the host computer. The two Bluetooth modules will connect to each other as long as the signal is not out of range, and it is a plug-and-play process.
 
 In this connection, the Arduino-Micro will receive the MIDI messages from the wireless connection and send it back to the host computer through the serial port (USB). 
 
@@ -284,6 +284,9 @@ Due to the instrument not being used in a safety critical system there is no fur
 \subsection{Conclusion}
 Being a prototype, the Slidarr is a viable instrument very capable of creating music in the hands of an artist.
 
+In conclusion, this project shows that a MIDI signal generated from the string is indeed very possible.
+The project works pretty well, and it's ready to test it on a real guitar or any musical instruments. However, the end result was quite satisfactory as it transmits MIDI note from the string to synthesizer software.
+
 \subsection{Future improvements and implementations}
 As the Slidarr proved to be successful, many things can now be done to make Slidarr more accessible to the public and make it a popular instrument one day. These improvements are both on the hardware side and software side.
 
@@ -294,6 +297,14 @@ Along with choosing a smaller microcontroller a more visually appealing, compact
 The use of multiple strings controlling e.g. the velocity and volume can be implemented. The type of instrument that can be created after this point is only limited by the imagination of the reader blabla
 
 picture with concepts
+
+---
+
+Another way to expand the system is by adding extra more strings controlling on the system, for instance: a string to control the MIDI note that corresponds to velocity and volume can be implemented,  by adding new string this will give the ability to control better the MIDI note and variety of sound could be generated. 
+
+In addition, by powering the microcontroller with the battery will make the project a fully portable device. And by adding a relay aim to reduce the battery power consumption by implementing a sleep mode e.g. if the string is not touched for a certain period of time it goes to turn off state and turned back to on state if the string is touch. This would lead to an increase in the standby lifetime of the power source.
+
+Although the hardware implementation of the project design is completed just extra things that could improve the received signal. Therefore we could move from breadboard to PCB prototype, also come up with a 3D printing encloser for it as well.
 
 \newpage
 \begin{thebibliography}{9}
@@ -330,11 +341,11 @@ LEDnique: LM317 constant-current power supply,
 Virtual loopback MIDI software,
 \\\texttt{https://www.tobias-erichsen.de/software/loopmidi.html}
 
-\bibitem{sengpielaudio}
+\bibitem{hairlessmidiserial}
 The Hairless MIDI Serial Bridge Software,
 \\\texttt{https://projectgus.github.io/hairless-midiserial/}
 
-\bibitem{sengpielaudio}
+\bibitem{arduinolibraries}
 Arduino Libraries: MIDIUSB library over USB,
 \\\texttt{https://github.com/arduino-libraries/MIDIUSB}
 
