@@ -1,0 +1,326 @@
+EESchema Schematic File Version 4
+EELAYER 29 0
+EELAYER END
+$Descr A4 11693 8268
+encoding utf-8
+Sheet 1 1
+Title ""
+Date ""
+Rev ""
+Comp ""
+Comment1 ""
+Comment2 ""
+Comment3 ""
+Comment4 ""
+$EndDescr
+$Comp
+L Regulator_Linear:LM317_3PinPackage U?
+U 1 1 5CEBA9BA
+P 3750 2800
+F 0 "U?" H 3750 3042 50  0001 C CNN
+F 1 "LM317" H 3750 2951 50  0000 C CNN
+F 2 "" H 3750 3050 50  0001 C CIN
+F 3 "http://www.ti.com/lit/ds/symlink/lm317.pdf" H 3750 2800 50  0001 C CNN
+	1    3750 2800
+	1    0    0    -1  
+$EndComp
+$Comp
+L Device:R R2
+U 1 1 5CF2BA11
+P 4450 2800
+F 0 "R2" V 4565 2800 50  0000 C CNN
+F 1 "R" V 4566 2800 50  0001 C CNN
+F 2 "" V 4380 2800 50  0001 C CNN
+F 3 "~" H 4450 2800 50  0001 C CNN
+	1    4450 2800
+	0    -1   -1   0   
+$EndComp
+$Comp
+L Device:R_POT SLIDARR
+U 1 1 5CF33B0D
+P 4800 3350
+F 0 "SLIDARR" H 4731 3350 50  0000 R CNN
+F 1 "R_POT" H 4731 3305 50  0001 R CNN
+F 2 "" H 4800 3350 50  0001 C CNN
+F 3 "~" H 4800 3350 50  0001 C CNN
+	1    4800 3350
+	1    0    0    -1  
+$EndComp
+$Comp
+L pspice:OPAMP U1
+U 1 1 5CF3D746
+P 6950 3650
+F 0 "U1" H 7294 3696 50  0001 L CNN
+F 1 "OPAMP" H 7294 3605 50  0001 L CNN
+F 2 "" H 6950 3650 50  0001 C CNN
+F 3 "~" H 6950 3650 50  0001 C CNN
+	1    6950 3650
+	1    0    0    -1  
+$EndComp
+$Comp
+L Device:R R3
+U 1 1 5CF3EB7F
+P 5750 3250
+F 0 "R3" H 5680 3250 50  0000 R CNN
+F 1 "R" H 5680 3295 50  0001 R CNN
+F 2 "" V 5680 3250 50  0001 C CNN
+F 3 "~" H 5750 3250 50  0001 C CNN
+	1    5750 3250
+	-1   0    0    1   
+$EndComp
+$Comp
+L Device:R R3
+U 1 1 5CF3ED87
+P 5750 4150
+F 0 "R3" H 5680 4150 50  0000 R CNN
+F 1 "R" H 5680 4195 50  0001 R CNN
+F 2 "" V 5680 4150 50  0001 C CNN
+F 3 "~" H 5750 4150 50  0001 C CNN
+	1    5750 4150
+	-1   0    0    1   
+$EndComp
+$Comp
+L Device:R R4
+U 1 1 5CF3F333
+P 5750 3700
+F 0 "R4" H 5680 3700 50  0000 R CNN
+F 1 "R" H 5680 3745 50  0001 R CNN
+F 2 "" V 5680 3700 50  0001 C CNN
+F 3 "~" H 5750 3700 50  0001 C CNN
+	1    5750 3700
+	-1   0    0    1   
+$EndComp
+$Comp
+L Device:R R5
+U 1 1 5CF46BB8
+P 6250 4400
+F 0 "R5" V 6365 4400 50  0000 C CNN
+F 1 "R" V 6366 4400 50  0001 C CNN
+F 2 "" V 6180 4400 50  0001 C CNN
+F 3 "~" H 6250 4400 50  0001 C CNN
+	1    6250 4400
+	0    -1   -1   0   
+$EndComp
+$Comp
+L Device:R R5
+U 1 1 5CF477EA
+P 6250 2900
+F 0 "R5" V 6365 2900 50  0000 C CNN
+F 1 "R5" V 6366 2900 50  0001 C CNN
+F 2 "" V 6180 2900 50  0001 C CNN
+F 3 "~" H 6250 2900 50  0001 C CNN
+	1    6250 2900
+	0    -1   -1   0   
+$EndComp
+$Comp
+L Device:R R5
+U 1 1 5CF49D2F
+P 6650 2900
+F 0 "R5" V 6765 2900 50  0000 C CNN
+F 1 "R5" V 6766 2900 50  0001 C CNN
+F 2 "" V 6580 2900 50  0001 C CNN
+F 3 "~" H 6650 2900 50  0001 C CNN
+	1    6650 2900
+	0    -1   -1   0   
+$EndComp
+Wire Wire Line
+	7250 2900 7250 3650
+Wire Wire Line
+	6100 2900 5750 2900
+Wire Wire Line
+	5750 2900 5750 3100
+Connection ~ 5750 2900
+Wire Wire Line
+	5750 3400 5750 3500
+Wire Wire Line
+	5750 3850 5750 3900
+Wire Wire Line
+	5750 4300 5750 4400
+Wire Wire Line
+	6100 4400 5750 4400
+Connection ~ 5750 4400
+Connection ~ 5750 3900
+Wire Wire Line
+	5750 3900 5750 4000
+Connection ~ 5750 3500
+Wire Wire Line
+	5750 3500 5750 3550
+Wire Wire Line
+	7250 3650 7550 3650
+Connection ~ 7250 3650
+Wire Wire Line
+	5150 3900 5150 4300
+Wire Wire Line
+	5150 3900 5750 3900
+Wire Wire Line
+	5150 3000 5150 3500
+Wire Wire Line
+	5150 3500 5750 3500
+$Comp
+L pspice:OPAMP U1
+U 1 1 5CF3C260
+P 5450 4400
+F 0 "U1" H 5450 3919 50  0001 C CNN
+F 1 "OPAMP" H 5500 4200 50  0001 C CNN
+F 2 "" H 5450 4400 50  0001 C CNN
+F 3 "~" H 5450 4400 50  0001 C CNN
+	1    5450 4400
+	1    0    0    1   
+$EndComp
+$Comp
+L Device:R R1
+U 1 1 5CF68575
+P 4500 4500
+F 0 "R1" V 4615 4500 50  0000 C CNN
+F 1 "R" V 4616 4500 50  0001 C CNN
+F 2 "" V 4430 4500 50  0001 C CNN
+F 3 "~" H 4500 4500 50  0001 C CNN
+	1    4500 4500
+	0    -1   -1   0   
+$EndComp
+Wire Wire Line
+	5150 4500 4800 4500
+Connection ~ 4800 4500
+Wire Wire Line
+	4800 4500 4650 4500
+Wire Wire Line
+	4800 2800 4600 2800
+Wire Wire Line
+	4300 2800 4050 2800
+Wire Wire Line
+	3750 3100 4800 3100
+Wire Wire Line
+	4800 3100 4800 2800
+$Comp
+L power:VCC #PWR?
+U 1 1 5CF85C94
+P 3250 2300
+F 0 "#PWR?" H 3250 2150 50  0001 C CNN
+F 1 "VCC" H 3267 2473 50  0000 C CNN
+F 2 "" H 3250 2300 50  0001 C CNN
+F 3 "" H 3250 2300 50  0001 C CNN
+	1    3250 2300
+	1    0    0    -1  
+$EndComp
+$Comp
+L power:GND #PWR?
+U 1 1 5CF4E39B
+P 4250 5550
+F 0 "#PWR?" H 4250 5300 50  0001 C CNN
+F 1 "GND" H 4255 5377 50  0000 C CNN
+F 2 "" H 4250 5550 50  0001 C CNN
+F 3 "" H 4250 5550 50  0001 C CNN
+	1    4250 5550
+	1    0    0    -1  
+$EndComp
+$Comp
+L Device:R R5
+U 1 1 5CF4A0E3
+P 6500 4750
+F 0 "R5" H 6570 4796 50  0000 L CNN
+F 1 "R" H 6570 4705 50  0000 L CNN
+F 2 "" V 6430 4750 50  0001 C CNN
+F 3 "~" H 6500 4750 50  0001 C CNN
+	1    6500 4750
+	1    0    0    -1  
+$EndComp
+Wire Wire Line
+	6500 4900 6500 5100
+Wire Wire Line
+	4800 5100 4800 4500
+Wire Wire Line
+	5350 4100 5350 3700
+Wire Wire Line
+	4800 4500 4800 3500
+Wire Wire Line
+	4800 3200 4800 3100
+Connection ~ 4800 3100
+Wire Wire Line
+	5350 3700 4250 3700
+Connection ~ 5350 3700
+Wire Wire Line
+	5350 3700 5350 3200
+Wire Wire Line
+	4950 3350 5050 3350
+Wire Wire Line
+	5050 3350 5050 2800
+Wire Wire Line
+	5050 2800 5150 2800
+Wire Wire Line
+	4250 4500 4350 4500
+Wire Wire Line
+	4250 3700 4250 4500
+Connection ~ 4250 4500
+Wire Wire Line
+	4250 4500 4250 5300
+Wire Wire Line
+	5350 4850 5350 4700
+Wire Wire Line
+	3250 2300 3250 2400
+Wire Wire Line
+	3250 2400 5350 2400
+Wire Wire Line
+	5350 2400 5350 2600
+Connection ~ 3250 2400
+Connection ~ 5350 2400
+Wire Wire Line
+	6850 5300 4250 5300
+Wire Wire Line
+	6500 2900 6400 2900
+Wire Wire Line
+	6850 2400 6850 3350
+Connection ~ 6500 2900
+Wire Wire Line
+	6500 2900 6500 3550
+Wire Wire Line
+	5750 4400 5700 4400
+Wire Wire Line
+	6500 3750 6500 4400
+Wire Wire Line
+	6500 3750 6650 3750
+Wire Wire Line
+	6650 3550 6500 3550
+Wire Wire Line
+	6400 4400 6500 4400
+Connection ~ 6500 4400
+Wire Wire Line
+	6500 4400 6500 4600
+Connection ~ 6500 5100
+Wire Wire Line
+	6500 5100 4800 5100
+Wire Wire Line
+	6850 3950 6850 5300
+Wire Wire Line
+	6800 2900 7250 2900
+$Comp
+L pspice:OPAMP U1
+U 1 1 5CF3B806
+P 5450 2900
+F 0 "U1" H 5794 2946 50  0001 L CNN
+F 1 "OPAMP" H 5794 2855 50  0001 L CNN
+F 2 "" H 5450 2900 50  0001 C CNN
+F 3 "~" H 5450 2900 50  0001 C CNN
+	1    5450 2900
+	1    0    0    -1  
+$EndComp
+Wire Wire Line
+	6500 5100 7550 5100
+Text GLabel 7550 3650 2    50   Output ~ 0
+ADC+
+Text GLabel 7550 5100 2    50   Output ~ 0
+ADC-
+Wire Wire Line
+	4250 5300 4250 5550
+Connection ~ 4250 5300
+Wire Wire Line
+	3250 2400 3250 2800
+Wire Wire Line
+	3250 4850 5350 4850
+Wire Wire Line
+	3450 2800 3250 2800
+Wire Wire Line
+	5350 2400 6850 2400
+Connection ~ 3250 2800
+Wire Wire Line
+	3250 2800 3250 4850
+$EndSCHEMATC
