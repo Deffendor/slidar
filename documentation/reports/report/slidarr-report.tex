@@ -45,7 +45,7 @@ The slidarr string represents a part of the traditional piano keyboard, as shown
 \end{figure}
 
 
-The instrument needs to be calibrated before played to know the minimum and maxiumum resistance range of the wire. After that the calibrated range is mapped to one octave on the keyboard. After starting or resetting, the Slidarr usually starts in the middle of the keyboard which is a C4 with a frequency of \SI{261}{\hertz} up to the next octave.
+The instrument needs to be calibrated before played to know the minimum and maximum resistance range of the wire. After that the calibrated range is mapped to one octave on the keyboard. After starting or resetting, the Slidarr usually starts in the middle of the keyboard which is a C4 with a frequency of \SI{261}{\hertz} up to the next octave.
 
 When sliding while touching the so called slide happens, which changes the frequency of the tone itself and sending pitchbend messages to the synthesizer. After the pitchbend is on the maximum possible the software will turn the tone off and switch to the next tone.
 
@@ -60,7 +60,7 @@ To sum it up these are the major functionalities of the Slidarr:
 \end{itemize}
 
 \section{Analysis}
-The initial idea of the Slidarr was to use a pair of strings and let the user's finger create contact between them, as shown in figure \ref{fig:slidarr_initial_sketch}. This turned out to be easy in theory, but much harder in practice. By measuring the resistance between points A-E and A-C, both the finger's position and its contact resistance can be calculated. But since the resistance in the finger is measured in the \SI{100}{\kilo\ohm}s and the string is only on the the \si{\milli\ohm} scale, it is very hard to get accurate measurements since both values are measured in the same measurement. This is beyond our electronics skills.
+The initial idea of the Slidarr was to use a pair of strings and let the user's finger create contact between them, as shown in figure \ref{fig:slidarr_initial_sketch}. This turned out to be easy in theory, but much harder in practice. By measuring the resistance between points A-E and A-C, both the finger's position and its contact resistance can be calculated. But since the resistance in the finger is measured in the \SI{100}{\kilo\ohm}s and the string is only on the \si{\milli\ohm} scale, it is very hard to get accurate measurements since both values are measured in the same measurement. This is beyond our electronics skills.
 
 \begin{figure}[ht]
   \centering
@@ -79,7 +79,7 @@ The initial idea of the Slidarr was to use a pair of strings and let the user's 
   \label{fig:slidarr_initial}
 \end{figure}
 
-Instead, a simpler solution is to use a single wire and let the user wear a conductor as shown in figure \ref{fig:slidarr_final_concept}. If the total reisistance of the string is known, the position of the finger can be calculated after measuring the resistance between the finger and one end of the string.
+Instead, a simpler solution is to use a single wire and let the user wear a conductor as shown in figure \ref{fig:slidarr_final_concept}. If the total resistance of the string is known, the position of the finger can be calculated after measuring the resistance between the finger and one end of the string.
 
 \begin{figure}[ht]
   \centering
@@ -101,7 +101,7 @@ This can be done in many different ways. One way is using a resistor bridge setu
   \label{fig:4terminal}
 \end{figure}
 
-A more suitable method is to use four-terminal measurement as shown in figure \ref{fig:4terminal}. A known constant currenti $I$ is fed through the resistor with unknown resistance $R$, and the voltage drop $V$ is measured with a separate pair of wires. The resistance can then easily be calculated using Ohms law, $ R = V / I $.
+A more suitable method is to use four-terminal measurement as shown in figure \ref{fig:4terminal}. A known constant current $I$ is fed through the resistor with unknown resistance $R$, and the voltage drop $V$ is measured with a separate pair of wires. The resistance can then easily be calculated using Ohms law, $ R = V / I $.
 
 \subsection{Voltage measurement} \label{sec:voltage_measurement}
 Using four-terminal measurement with a current of \SI{100}{\milli\ampere}, the change in voltage per millimeter string is \SI{50}{\micro\volt}. This has now turned into a matter of measuring low-level voltages.
@@ -114,7 +114,7 @@ Since we are interested in the voltage difference over the string, a differentia
 \subsection{The MIDI protocol} \label{sec:midi_protocol}
 The MIDI (Musical Instrument Digital Interface) protocol is the industry standard for communication between electronic musical instruments and synthesizers \cite{midiorg}. It does not transport the audio itself, instead messages with instructions about the note, its volume and duration are sent to a receiving device which generates the sound. 
 
-MIDI was designed to be used with digital piano keyboards. The messages indicate \textit{note on}, \textit{note off}, and their \textit{velocity} (volume). The protocol is built around the concept of piano notes, which is not optimal for the Slidarr which operates at a continous scale rather than at fixed frequency intervals.
+MIDI was designed to be used with digital piano keyboards. The messages indicate \textit{note on}, \textit{note off}, and their \textit{velocity} (volume). The protocol is built around the concept of piano notes, which is not optimal for the Slidarr which operates at a continuous scale rather than at fixed frequency intervals.
 
 The solution to this is the \textit{pitchbend} message, which is usually controlled by a wheel controller on the keyboard. It is a global parameter that bends the pitch (offsets the frequency) of the currently played notes, on synths that support it. The amount of bending is not standardized and can differ between synthesizers.
 
@@ -151,12 +151,12 @@ $$ f = 440 \times 2^{\frac{n-69}{12}} $$
 \subsection{Sound generation}
 The MIDI signals does nothing on their own. They need to be interpreted by a \textit{sound synthesizer}, or \textit{synth} in short, which uses the MIDI input to control the frequency and characteristics of its audio output. They usually provide an interface for adjusting the parameters, making it possible to generate a wide variety of sounds using the same synth. 
 
-There are countless of free software synths available online that supports MIDI and can be used with the Slidarr, but not every sound is suitable for this instrument. Since it is \textit{monophonic}, i.e. it can only play one note at a time, and is able to slide continously between notes, the synth should preferably have a soft sound with a constant volume in order to hide the transition between notes when sliding.
+There are countless of free software synths available online that supports MIDI and can be used with the Slidarr, but not every sound is suitable for this instrument. Since it is \textit{monophonic}, i.e. it can only play one note at a time, and is able to slide continuously between notes, the synth should preferably have a soft sound with a constant volume in order to hide the transition between notes when sliding.
 
 \section{Hardware design}
 
 
-The hardware can be divided into three parts: the \textit{string sensor}, i.e. the string and the conductor; the \textit{positioning unit}, and the microcontroller.
+The hardware can be divided into two parts: the \textit{string sensor}, i.e. the string and the conductor; and the \textit{positioning unit}.
 
 \subsection{Positioning unit}
 The positioning unit contains the constant current regulator and the instrumentation amplifier, as described in section \ref{sec:resistance_measurement}. An LM317 voltage regulator is set up to feed a constant current through the string. The current $I$ is determined by resistor $R2$ \cite{lm317}:
@@ -172,7 +172,7 @@ For $ I = \SI{100}{\milli\ampere} $, $R_2 = \SI{12.5}{\ohm} $. This resistor als
   \label{fig:slidarr-circuit}
 \end{figure}
 
-The instrumentation amplifier is built using three operation amplifiers. Its total amplification $A$ can be determined by:
+The instrumentation amplifier is built using three operational amplifiers. Its total amplification $A$ can be determined by:
 
 $$ A = 1 + \frac{2R_3}{R_4} $$. 
 
@@ -206,9 +206,6 @@ The string sensor consists of a \SI{300}{\milli\meter} long copper wire with a d
   \label{fig:string_sensor}
 \end{figure}
 
-\subsection{Microcontroller}
-The micocontroller used is TI EK-TM4C123GXL is the same as TM4C123GH6PM. The software where used in this project is Code Composer Studio IDE to compile and debugging the code, primarily in C.
-
 \section{Implementation}
 
 For the total system to play music in the end, there are four major parts: the circuit/instrument itself, the microcontroller with its peripherals, the connection to the synthesizer/computer and the synthersizer/computer. See image x.
@@ -220,7 +217,7 @@ For the total system to play music in the end, there are four major parts: the c
   \label{fig:slidarr overview}
 \end{figure}
 
-The microcontroller is an ARM Cortex-M4 (TI TM4C123GH6PM for the prototype) that is running at 16MHz. The connection to the computer or snythesizer is optionally either via a tty to USB converter, Bluetooth directly or a Bluetooth bridge with a USB compatible end device.
+The microcontroller used is Tiva C series EK-TM4C123GXL an ARM Cortex-M4 (TI TM4C123GH6PM for the prototype) that is running at 16MHz. The software used in this project is Code Composer Studio IDE to compile and debug the code, primarily in C. The connection to the computer or synthesizer is optionally either via a tty to USB converter, Bluetooth directly or a Bluetooth bridge with a USB compatible end device.
 
 \subsection{Peripherals}
 Peripherals used are the on-chip 12-bit ADC, General Purpose Inputs/Outputs and the UART.
@@ -231,7 +228,7 @@ There are two inputs used. The two inputs are buttons, that put the device into 
 
 Three outputs are connected to three LEDs of different colors by using transistors as switches and resistors to limit the current. The green LED indicates if the string is touched at the moment. The red LED signals if the calibration mode is currently running. The blue LED shows when the user is in the scrolling mode.
 
-The UART is used to send out the MIDI bytes to the sound generating device. Only the transmit line is utilized. The receive line stays untouched for the forseeable future because there is no use for it at this stage. The UART is configured for 8 bits with baud rates of 9600, 38400 or 115200 which can be changed in the defaults.h file. The chip has a 16 byte transmit buffer that is implemented into the hardware. This makes it easy to send out multiple bytes (3 bytes for midi messages) putting them into the buffer all at once without having to wait for every single byte to be transmitted, which would block the execution otherwise.
+The UART is used to send out the MIDI bytes to the sound generating device. Only the transmit line is utilized. The receiving line stays untouched for the foreseeable future because there is no use for it at this stage. The UART is configured for 8 bits with baud rates of 9600, 38400 or 115200 which can be changed in the defaults.h file. The chip has a 16 byte transmit buffer that is implemented into the hardware. This makes it easy to send out multiple bytes (3 bytes for midi messages) putting them into the buffer all at once without having to wait for every single byte to be transmitted, which would block the execution otherwise.
 
 \subsection{Programming model}
 The microcontroller is programmed `bare-metal` so to say. This means there is no use of external libraries and the configuration of the peripherals are all made with the help of the reference manual setting the registers directly. The only thing that is used, is the given header file for the microcontroller.
@@ -242,7 +239,7 @@ The code starts initializing most of the used variables on the stack locally in 
 
 The state machine runs in an infinite while loop that is controlled by the SysTick timer. The timer can be set at a specified interval given by the defaults. A five milliseconds interval is a good value to use because it gives the processor enough time to do all the calculations and doesn't spam the UART too much while not creating a noticeable delay (respecting the buffer). After the code does all the processing it waits for the SysTick timer to timeout and repeat the process. The waiting is blocking the processor which is intended and doesn't harm the implementation at the current stage.
 
-There are four states the slidarr is in at any given point in time which are IDLE, SLIDE, SCROLL and CALIBRATE. See image x. There are three LEDs which are turned on when entering the states of SLIDE, SCROLL and CALIBRATE to give the user feedback of the devices state which have the colors green, blue, and red respectively.
+There are four states the Slidarr is in at any given point in time which are IDLE, SLIDE, SCROLL and CALIBRATE. See image x. There are three LEDs which are turned on when entering the states of SLIDE, SCROLL and CALIBRATE to give the user feedback of the devices state which have the colors green, blue, and red respectively.
 The states are influenced by the following properties: \textit{string touched} flag, \textit{string sliding} flag, \textit{pitchbend maximum offset}, \textit{calibration button} and \textit{scrolling button}.
 
 \begin{figure}[ht]
@@ -253,7 +250,7 @@ The states are influenced by the following properties: \textit{string touched} f
 \end{figure}
 
 \subsection{ADC sample buffering}
-The flags of \textit{string touched} and \textit{string sliding} are set by a mean and standard deviation calculated from the last n samples from the ADC. The mean and standard deviation filter the sampled values from noise and keep the slidarr from jumping around too much.
+The flags of \textit{string touched} and \textit{string sliding} are set by a mean and standard deviation calculated from the last n samples from the ADC. The mean and standard deviation filter the sampled values from noise and keep the Slidarr from jumping around too much.
 Every read from the ADC is put into a ring buffer of a specified size by the defaults that keeps the history. The size depends on the sample time and noise, but recommended sizes range from 5 to 50 values. Having a large sample time and a big history buffer will result in larger delays and response time.
 
 To set the flags there are threshold values that are compared to the mean and standard deviation to decide the state.
@@ -265,7 +262,7 @@ The strings needs to be calibrated to find out at what voltage the string starts
 While sliding it is possible to change the current octave to a higher or lower one by scrolling. When the scroll button is pressed while sliding it will change the base frequency to a higher or lower depending on the sliding direction.
 
 \subsection{Generating continuous sound}
-As mentioned in secion \ref{sec:midi_protocol}, MIDI transmit fixed notes and not the actual frequency values. When touching the string, it is unlikely to hit at a perfect MIDI frequency. In order to be able to slide the frequency up or down continuously, the Slidarr calculates how much the touch position deviates from the actual MIDI note, and uses that value to send a \textit{pitchbend} message. 
+As mentioned in section \ref{sec:midi_protocol}, MIDI transmit fixed notes and not the actual frequency values. When touching the string, it is unlikely to hit at a perfect MIDI frequency. In order to be able to slide the frequency up or down continuously, the Slidarr calculates how much the touch position deviates from the actual MIDI note, and uses that value to send a \textit{pitchbend} message. 
 
 The pitchbend is implemented in the synth and adjusts the global frequency of the sound, but usually only stretches $\pm$2 semitones. The configuration of the Slidarr needs to match the settings of the synth. Whenever the pitchbend value reaches the maximum, the Slidarr will automatically turn of the note, reset the pitchbend and turn of the next note. This way, any tone can be played on the Slidarr.
 
@@ -293,7 +290,7 @@ In this connection, the Arduino-Micro will receive the MIDI messages from the wi
 \section{Testing and debugging}
 The Slidarr has been developed in a modular approach, adding the functionalities together one by one, until the end when testing the system as a whole. The system is tested empirically, going through all the use cases, treating the device as a black box.
 
-Using the debugger to view the memory during faulty behaviour was enough to find the bugs and misbehaviour. Instead of using the whole Slidarr hardware (string, circuit, power supply, etc) to test the software, a simple potentiometer with a button connected to the ADC, similar behaviour could be simulated.
+Using the debugger to view the memory during faulty behavior was enough to find the bugs and misbehavior. Instead of using the whole Slidarr hardware (string, circuit, power supply, etc) to test the software, a simple potentiometer with a button connected to the ADC, similar behavior could be simulated.
 
 \section{Results}
 
@@ -309,15 +306,15 @@ All code that was developed during this project is made available at GitHub: \te
 \subsection{Future improvements and implementations}
 As the Slidarr proved to be successful, many things can now be done to make Slidarr more accessible to the public and make it a mainstream instrument. These improvements are both on the hardware side and software side.
 
-The code can be made more modular for use on other microcontrollers, for Slidarr by converting it to use CMSIS. A more optimal and cost effective microcontroller can be choosen. The current program uses 12KB (out of 256KB) of flash storage and 500 bytes (out of 32KB) of SRAM. In addition the software runs without any problems at 16MHz. This means a much smaller microcontroller could be used for future implementations.
+The code can be made more modular for use on other microcontrollers, for Slidarr by converting it to use CMSIS. A more optimal and cost effective microcontroller can be chosen. The current program uses 12KB (out of 256KB) of flash storage and 500 bytes (out of 32KB) of SRAM. In addition the software runs without any problems at 16MHz. This means a much smaller microcontroller could be used for future implementations.
 
-Along with choosing a smaller microcontroller a more visually appealing, compact, and battery powered device can be construted. Using higher precision ADCs and other materials that have other eletric conductivity properties to measure the distance can be researched for use in different instrument variations.
+Along with choosing a smaller microcontroller a more visually appealing, compact, and a battery-powered device can be constructed. Using higher precision ADCs and other materials that have other electrical conductivity properties to measure the distance can be researched for use in different instrument variations.
 
 Another way to expand the system is by adding more strings to the system, for instance: a string to control the MIDI note that corresponds to velocity and volume can be implemented in order to add another dimension to the music.
 
 In addition, by powering the microcontroller with the battery will make the project a fully portable device. And by adding a relay aim to reduce the battery power consumption by implementing a sleep mode e.g. if the string is not touched for a certain period of time it goes to turn off state and turned back to on state if the string is touch. This would lead to an increase in the standby lifetime of the power source.
 
-The hardware could be improved in many ways. The positioning unit is heavily dependent on a clean and reliable power supply, and too sensitive to be powered from a transformer. The electronic components should also be soldered onto a dedicated PCB, in order to remove all the contact issues that the breadboad suffers from.
+The hardware could be improved in many ways. The positioning unit is heavily dependent on a clean and reliable power supply, and too sensitive to be powered from a transformer. The electronic components should also be soldered onto a dedicated PCB, in order to remove all the contact issues that the breadboard suffers from.
 
 \newpage
 \begin{thebibliography}{9}
