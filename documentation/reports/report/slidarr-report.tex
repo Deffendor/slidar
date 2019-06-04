@@ -59,7 +59,7 @@ To sum it up these are the major functionalities of the Slidarr:
 \end{itemize}
 
 \section{Analysis}
-The initial idea of the Slidarr was to use a pair of strings and let the user's finger create contact between them, as shown in figure \ref{fig:slidarr_initial_sketch}. This turned out to be easy in theory, but much harder in practice. By measuring the resistance between points A-E and A-C, both the finger's position and its contact resistance can be calculated. But since the resistance in the finer is measured in the \SI{100}{\kilo\ohm}s and the string is only on the the \si{\milli\ohm} scale, it is very hard to get accurate measurements since both values are measured in the same measurement. This is beyond our electronics skills.
+The initial idea of the Slidarr was to use a pair of strings and let the user's finger create contact between them, as shown in figure \ref{fig:slidarr_initial_sketch}. This turned out to be easy in theory, but much harder in practice. By measuring the resistance between points A-E and A-C, both the finger's position and its contact resistance can be calculated. But since the resistance in the finger is measured in the \SI{100}{\kilo\ohm}s and the string is only on the the \si{\milli\ohm} scale, it is very hard to get accurate measurements since both values are measured in the same measurement. This is beyond our electronics skills.
 
 \begin{figure}[h]
   \centering
@@ -151,7 +151,7 @@ $$ f = 440 \times 2^{\frac{n-69}{12}} $$
 \subsection{Sound generation}
 The MIDI signals does nothing on their own. They need to be interpreted by a \textit{sound synthesizer}, or \textit{synth} in short, which uses the MIDI input to control the frequency and characteristics of its audio output. They usually provide an interface for adjusting the parameters, making it possible to generate a wide variety of sounds using the same synth. 
 
-There are countless of free software synths available online that supports MIDI and can be used with the Slidarr, but not every sound is suitable for this instrument. Since it is \textit{monophonic}, i.e. it can only play one note at a time, and is able to slide continously between notes, the synth should preferrably have a soft sound with a constant volume in order to hide the transition between notes when sliding.
+There are countless of free software synths available online that supports MIDI and can be used with the Slidarr, but not every sound is suitable for this instrument. Since it is \textit{monophonic}, i.e. it can only play one note at a time, and is able to slide continously between notes, the synth should preferably have a soft sound with a constant volume in order to hide the transition between notes when sliding.
 
 \section{Hardware design}
 
@@ -308,6 +308,9 @@ Being a prototype, the Slidarr is a viable instrument very capable of creating m
 
 In conclusion, this project shows that a MIDI signal generated from the string is indeed very possible.
 The project works pretty well, and it's ready to test it on a real guitar or any musical instruments. However, the end result was quite satisfactory as it transmits MIDI note from the string to synthesizer software.
+
+\subsection{Open source}
+All code that was developed during this project is made available at GitHub: \texttt{https://github.com/Deffendor/slidar}
 
 \subsection{Future improvements and implementations}
 As the Slidarr proved to be successful, many things can now be done to make Slidarr more accessible to the public and make it a popular instrument one day. These improvements are both on the hardware side and software side.
