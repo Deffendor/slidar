@@ -26,16 +26,16 @@ Construction of the Slidarr}
 \section{Project Overview}
 
 \subsection{From prestudy to project end}
-The initial idea was to create an instrument that looks like a guitar and could even be used on a guitar but works in a completely different way. Touching or rather connecting two strings with the finger would connect them conducting electricity and from the location of the finger a tone would be created. This would essentially map the keys of a piano to the strings of the guitar. With that one can change the tone, pitch and also scroll to a different position on the note scale.
+The initial idea was to create an instrument that looks like a guitar and could even be used on a guitar but works in a completely different way. Touching or rather connecting two strings with the finger would connect them conducting electricity and from the location of the finger a tone would be created. This would essentially map the keys of a piano to the strings of the guitar. With that it is possible to change the tone, bend the pitch and scroll to a different position on the note scale.
 
-The goal for the project is to create a prototype that can demonstrate what kind of instrument this could turn out to be in the future and give the reader/spectator further stimulation for more ideas based on this concept. To be able to realize the project and get a prototype running, optimized environment settings are used. This means there is only a single string/wire and a copper finger connected to a wire to measure the resistance/distance on the string where the two would touch.
+The goal for the project is to create a prototype that can demonstrate what kind of instrument this could turn out to be in the future and give further stimulation for more ideas based on this concept. To be able to realize the project and get a prototype running, optimized environment settings are used. This means there is only a single string and a copper finger connected to a wire to measure the distance on the string where the two would touch.
 
-The focus for this proof of concept lies on the electronic hardware and software part so that the type of instrument created with it can vary and is in the hands of the artist.
+The focus for this proof of concept lays on the electronic hardware and software part so that the type of instrument created with it can vary and is in the hands of the artist.
 
 
 \subsection{Concept}
 
-The slidarr string represents a part of the traditional piano keyboard, as shown in figure \ref{fig:slidarr}. Touching and releasing the Slidarr on the string has the same effect as pressing and releasing a piano key. The location is determined by the developed embedded system and sent to a synthesizer where the tone is generated/played. In addition to touching and releasing, it is also possible to slide on the point to the left or right, thus the name `Slidarr`. This has the effect of bending the pitch of the tone and jumping seamlessly to the next key/tone. 
+The slidarr string represents a part of the traditional piano keyboard, as shown in figure \ref{fig:slidarr}. Touching and releasing the Slidarr on the string has the same effect as pressing and releasing a piano key. The location is determined by the developed embedded system and sent to a synthesizer where the sound is generated. In addition to touching and releasing, it is also possible to slide on the point to the left or right, thus the name `Slidarr`. This has the effect of bending the pitch of the tone and jumping seamlessly to the next key. 
 
 \begin{figure}[ht]
   \centering
@@ -47,7 +47,7 @@ The slidarr string represents a part of the traditional piano keyboard, as shown
 
 The instrument needs to be calibrated before played to know the minimum and maximum resistance range of the wire. After that the calibrated range is mapped to one octave on the keyboard. After starting or resetting, the Slidarr usually starts in the middle of the keyboard which is a C4 with a frequency of \SI{261}{\hertz} up to the next octave.
 
-When sliding while touching the so called slide happens, which changes the frequency of the tone itself and sending pitchbend messages to the synthesizer. After the pitchbend is on the maximum possible the software will turn the tone off and switch to the next tone.
+When sliding while touching the so called slide happens, which changes the frequency of the tone itself and sending pitchbend messages to the synthesizer. After the pitchbend is at the maximum, the software will turn the tone off and switch to the next tone.
 
 To change the current octave to another location on the keyboard a scroll is possible. While touching the Slidarr, holding down the scroll button and then sliding in a desired direction the `window` of the current frequency range slides to the left or right of the total scale.
 
@@ -89,7 +89,7 @@ Instead, a simpler solution is to use a single wire and let the user wear a cond
 \end{figure}
 
 \subsection{Resistance measurement} \label{sec:resistance_measurement}
-A copper wire of length 1 meter and diameter of \SI{0.5}{mm} has a resistance of \SI{0.5}{\ohm} per meter \cite{copperresistance}. In order to track the position  with millimeter accuracy, we need to measure in the sub-\si{\milli\ohm} range. 
+A copper wire of length 1 meter and diameter of \SI{0.5}{mm} has a resistance of \SI{0.5}{\ohm} per meter \cite{copperresistance}. In order to track the position with millimeter accuracy, we need to measure in the sub-\si{\milli\ohm} range. 
 
 This can be done in many different ways. One way is using a resistor bridge setup, e.g. a Wheatstone or Kelvin bridge, which is able to sense tiny changes in resistance. However, the bridge needs to be balanced with accurate resistors of similar value of the measured resistor, which is hard to achieve with standard resistors when the measured resistance is this small.
 
@@ -197,7 +197,7 @@ The TS464 is a chip with four integrated op-amps. Figure \ref{fig:slidarr-circui
 \end{figure}
 
 \subsection{String sensor}
-The string sensor consists of a \SI{300}{\milli\meter} long copper wire with a diameter of \SI{0.5}{\milli\meter}, stretched between two screws on a wooden plank (see figure \ref{fig:string_sensor}.  The user wears a conductive copper C-shaped ring on one of its fingers, which will be used to make contact with the string. The C-shape makes it possible to bend the ring to a perfect fit for the user. The voltage difference can then be measured between the ring and one end of the string. The string sensor can be though of as a simple potentiometer, marked SLIDARR in figure \ref{fig:slidarr-circuit}.
+The string sensor consists of a \SI{300}{\milli\meter} long copper wire with a diameter of \SI{0.5}{\milli\meter}, stretched between two screws on a wooden plank (see figure \ref{fig:string_sensor}.  The user wears a conductive copper C-shaped ring on one of its fingers, which will be used to make contact with the string. The C-shape makes it possible to bend the ring to a perfect fit for the user. The voltage difference can then be measured between the ring and one end of the string. The string sensor can be thought of as a simple potentiometer, marked SLIDARR in figure \ref{fig:slidarr-circuit}.
 
 \begin{figure}[ht]
   \centering
@@ -208,7 +208,7 @@ The string sensor consists of a \SI{300}{\milli\meter} long copper wire with a d
 
 \section{Implementation}
 
-For the total system to play music in the end, there are four major parts: the circuit/instrument itself, the microcontroller with its peripherals, the connection to the synthesizer/computer and the synthersizer/computer. See figure~\ref{fig:slidarr overview}.
+For the total system to play music, there are four major parts: the instrument with its measurment circuit, the microcontroller with the peripherals, the connection to the synthesizer and the synthersizer itself. See figure~\ref{fig:slidarr overview}.
 
 \begin{figure}[ht]
   \centering
@@ -217,18 +217,18 @@ For the total system to play music in the end, there are four major parts: the c
   \label{fig:slidarr overview}
 \end{figure}
 
-The microcontroller used is Tiva C series EK-TM4C123GXL an ARM Cortex-M4 (TI TM4C123GH6PM for the prototype) that is running at 16MHz. The software used in this project is Code Composer Studio IDE to compile and debug the code, primarily in C. The connection to the computer or synthesizer is optionally either via a tty to USB converter, Bluetooth directly or a Bluetooth bridge with a USB compatible end device.
+The microcontroller used is a Tiva C series EK-TM4C123GXL based on an ARM Cortex-M4 (TI TM4C123GH6PM for the prototype) that is running at 16MHz. The software used in this project is Code Composer Studio IDE to compile and debug the code, primarily in C. The connection to the computer or synthesizer is optionally either via a tty to USB converter, Bluetooth directly or a Bluetooth bridge with a USB compatible end device.
 
 \subsection{Peripherals}
-Peripherals used are the on-chip 12-bit ADC, General Purpose Inputs/Outputs and the UART.
+Peripherals used, are the on-chip 12-bit ADC, general purpose inputs/outputs and the UART.
 
 The analog to digital converter is 12-bit wide and the used reference voltage is the same as the microcontroller is using (3.3V). Using the above described measurement method the voltage difference from the low end of the string to the upper end lies between 0.2V to 0.4V. With a step size of 0.8mV this gives us at least 250 steps to work with per octave depending on the calibration. The ADC reads only one sample at a time from a single channel and the conversion is triggered by software when needed.
 
-There are two inputs used. The two inputs are buttons, that put the device into calibration mode and into scrolling mode. For the buttons internal on-chip pull-ups are enabled so that no additional components are needed other than the button. The buttons are debounced in the software.
+There are two inputs used. The two inputs are buttons, that put the device into calibration mode or into scrolling mode. For the buttons, internal on-chip pull-ups are enabled, so that no additional components are needed other than the buttons themselfes. The buttons are debounced in the software.
 
 Three outputs are connected to three LEDs of different colors by using transistors as switches and resistors to limit the current. The green LED indicates if the string is touched at the moment. The red LED signals if the calibration mode is currently running. The blue LED shows when the user is in the scrolling mode.
 
-The UART is used to send out the MIDI bytes to the sound generating device. Only the transmit line is utilized. The receiving line stays untouched for the foreseeable future because there is no use for it at this stage. The UART is configured for 8 bits with baud rates of 9600, 38400 or 115200 which can be changed in the defaults.h file. The chip has a 16 byte transmit buffer that is implemented into the hardware. This makes it easy to send out multiple bytes (3 bytes for midi messages) putting them into the buffer all at once without having to wait for every single byte to be transmitted, which would block the execution otherwise.
+The UART is used to send out the MIDI bytes to the sound generating device. Only the transmit line is utilized. The receiving line stays untouched for the foreseeable future because there is no use for it at this stage. The UART is configured for 8 bits with baud rates of 9600, 38400 or 115200 which can be changed in the \textit{defaults.h} file. The chip has a 16 byte transmit buffer that is implemented into the hardware. This makes it easy to send out multiple bytes (3 bytes for midi messages) putting them into the buffer all at once without having to wait for every single byte to be transmitted, which would block the execution otherwise.
 
 \subsection{Programming model}
 The microcontroller is programmed `bare-metal` so to say. This means there is no use of external libraries and the configuration of the peripherals are all made with the help of the reference manual setting the registers directly. The only thing that is used, is the given header file for the microcontroller.
@@ -256,24 +256,24 @@ Every read from the ADC is put into a ring buffer of a specified size by the def
 To set the flags there are threshold values that are compared to the mean and standard deviation to decide the state.
 
 \subsection{Calibration}
-The strings needs to be calibrated to find out at what voltage the string starts and where it ends. To start the calibration the calibration button is pressed without releasing it. Only when both the button and the string is touched will the calibration start. After the string is touch the button can be released. Sliding from the minimum to the maximum or vice versa will find the string base value (min) and the octave span (min - max) (refer to figure \ref{fig:slidarr}). Removing the contact from the string ends the calibration. The range that was slid over will now represent the octave C4 to C5.
+The strings needs to be calibrated to find out at what voltage the string starts and where it ends. To start the calibration the calibration button is pressed without releasing it. Only when both the button and the string is touched will the calibration start. After the string is touch the button can be released. Sliding from the minimum to the maximum or vice versa will find the string base value (min) and the octave span (min - max) (refer to figure \ref{fig:slidarr}). Removing the contact from the string ends the calibration. The range that was slid over will now represents the octave C4 to C5.
 
 \subsection{Scrolling}
-While sliding it is possible to change the current octave to a higher or lower one by scrolling. When the scroll button is pressed while sliding it will change the base frequency to a higher or lower depending on the sliding direction.
+While sliding it is possible to change the current octave range to a higher or lower one by scrolling. When the scroll button is pressed while sliding it will change the base frequency to a higher or lower depending on the sliding direction.
 
 \subsection{Generating continuous sound}
 As mentioned in section \ref{sec:midi_protocol}, MIDI transmit fixed notes and not the actual frequency values. When touching the string, it is unlikely to hit at a perfect MIDI frequency. In order to be able to slide the frequency up or down continuously, the Slidarr calculates how much the touch position deviates from the actual MIDI note, and uses that value to send a \textit{pitchbend} message. 
 
-The pitchbend is implemented in the synth and adjusts the global frequency of the sound, but usually only stretches $\pm$2 semitones. The configuration of the Slidarr needs to match the settings of the synth. Whenever the pitchbend value reaches the maximum, the Slidarr will automatically turn of the note, reset the pitchbend and turn of the next note. This way, any tone can be played on the Slidarr.
+The pitchbend is implemented in the synth and adjusts the global frequency of the sound, but usually only stretches $\pm$2 semitones. The configuration of the Slidarr needs to match the settings of the synth. Whenever the pitchbend value reaches the maximum, the Slidarr will automatically turn off the note, reset the pitchbend and turn on the next note. This way, any tone can be played on the Slidarr.
 
-However, the switch between notes often causes a glitch in the sound from the synth. This can be avoided by choosing a smooth sound, or increase the pitchbend range on both the synth and the Slidarr. As for now, this range is can only be changed from the source code.
+However, the switch between notes often causes a glitch in the sound from the synth. This can be avoided by choosing a smooth sound, or increase the pitchbend range on both the synth and the Slidarr. As for now, this range can only be changed from the source code.
 
 \subsection{Wireless connection}
-In this project, a Bluetooth module HC-05 is used as a second transmitting device together with USB-TTL device, the advantage of using a wireless connection other than moving the microcontroller around freely within the area of the network, it gives the ability to test the output signal on different software. Also, these two ways of transmitting the MIDI message improved the testing process. 
+In this project, a Bluetooth module HC-05 is used as a second transmitting device together with a USB-TTL device, the advantage of using a wireless connection other than moving the microcontroller around freely within the area of the network, it gives the ability to test the output signal on different software. Also, these two ways of transmitting the MIDI message improved the testing process. 
 
-The Bluetooth module HC-05, it operates on 5 V, supports Bluetooth 2.0 and communicates via UART. Both Bluetooth modules have configured at baud rate from default 9600 to 115200 by AT command mode, as well as one of the module configured as master (it only connect to the slave module) and other one left as a slave.
+The Bluetooth module HC-05 operates on 5 V, supports Bluetooth 2.0 and communicates via UART. Both Bluetooth modules are configured at baud rates from default 9600 to 115200 by AT command mode, as well as one of the modules is configured as master (it only connects to the slave module) and the other one is left as a slave.
 
-There are two ways of sending MIDI note from TM4C microcontroller, one way is through a direct connection between the microcontroller with Bluetooth module and the host computer that support Bluetooth connection (paired Bluetooth device). The second alternative way is preferable as this actually not involve any third-party software in the host computer, through a wireless bridge link between the TM4C microcontroller and Arduino-Micro microcontroller together by using master and slave Bluetooth module. Both methods of implementation are briefly explained in details.
+There are two ways of sending MIDI notes from the TM4C microcontroller, one way is through a direct connection between the microcontroller with Bluetooth module and the host computer that supports Bluetooth connection (paired Bluetooth device). The second alternative way is preferable, as this actually does not involve any third-party software in the host computer, through a wireless bridge link between the TM4C microcontroller and Arduino-Micro microcontroller together by using master and slave Bluetooth module. Both methods of implementation are briefly explained in details.
 
 \subsubsection{Direct Bluetooth connection}
 A Bluetooth slave connected with the microcontroller and after the pairing process in the host computer (pairing only made once) than Bluetooth Led state change from blink every second to stop blinking. The host computer will act as a central hub, and it is as simple as a two-click process.
@@ -283,14 +283,14 @@ In this connection, two software required LoopMIDI \cite{loopmidi} and the Hairl
 The software is periodically checked and if any MIDI note received, the synthesizer will generate audio signals.
 
 \subsubsection{Wireless bridge connection}
-A Bluetooth slave and master connected to the TM4C and Arduino-Micro microcontroller respectively. Arduino-Micro and few other Arduino are supported because it has HID (Human Interface Devices) capability, this microcontroller used because it supports MIDIUSB library \cite{arduinolibraries} that allows the transmitted message to be easily recognized by any synthesizer software, unlike the first way which used third-party software in the host computer. The two Bluetooth modules will connect to each other as long as the signal is not out of range, and it is a plug-and-play process.
+A Bluetooth slave and master connected to the TM4C and Arduino-Micro microcontroller respectively. Arduino-Micro and few other Arduino are supported because it has HID (Human Interface Devices) capability, this microcontroller is used because it supports the MIDIUSB library \cite{arduinolibraries} that allows the transmitted message to be easily recognized by any synthesizer software, unlike the first way which used third-party software in the host computer. The two Bluetooth modules will connect to each other as long as the signal is not out of range, and it is a plug-and-play process.
 
 In this connection, the Arduino-Micro will receive the MIDI messages from the wireless connection and send it back to the host computer through the serial port (USB). 
 
 \section{Testing and debugging}
 The Slidarr has been developed in a modular approach, adding the functionalities together one by one, until the end when testing the system as a whole. The system is tested empirically, going through all the use cases, treating the device as a black box.
 
-Using the debugger to view the memory during faulty behavior was enough to find the bugs and misbehavior. Instead of using the whole Slidarr hardware (string, circuit, power supply, etc) to test the software, a simple potentiometer with a button connected to the ADC, similar behavior could be simulated.
+Using the debugger to view the memory during faulty behavior was enough to find the bugs and misbehavior. Instead of using the whole Slidarr hardware (string, circuit, power supply, etc) to test the software, using a simple potentiometer with a button connected to the ADC, similar behavior could be simulated.
 
 \section{Results}
 
@@ -298,7 +298,7 @@ Using the debugger to view the memory during faulty behavior was enough to find 
 Being a prototype, the Slidarr is a viable instrument very capable of creating music in the hands of an artist.
 
 To conclude, this project shows that a MIDI signal generated from the string is possible.
-The Slidarr works well, but has some glitches and bugs which need to be fixed in order to make it easier to play. However, the end result was quite satisfactory as it transmits MIDI note from the string to synthesizer software.
+The Slidarr works well, but has some glitches and bugs which need to be fixed in order to make it easier to play. However, the end result was quite satisfactory as it transmits MIDI notes from the string to synthesizer software.
 
 \subsection{Open source}
 All code that was developed during this project is made available at GitHub: \texttt{https://github.com/Deffendor/slidar}
