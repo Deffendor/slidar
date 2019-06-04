@@ -28,27 +28,28 @@ Construction of the Slidarr}
 \subsection{From prestudy to project end}
 The initial idea was to create an instrument that looks like a guitar and could even be used on a guitar but works in a completely different way. Touching or rather connecting two strings with the finger would connect them conducting electricity and from the location of the finger a tone would be created. This would essentially map the keys of a piano to the strings of the guitar. With that one can change the tone, pitch and also scroll to a different position on the note scale.
 
-The goal for the project is to create a prototype that can demonstrate what kind of instrument this could turn out to be in the future and give the reader/spectator further stimulation for more ideas based on this concept. To be able to realize the project and get a prototype running, optimized environment settings are used. This means there is only a single string/wire and a copper finger connected to a wire to measure the resistance/distance on the string where the two would touch. See figure x.
+The goal for the project is to create a prototype that can demonstrate what kind of instrument this could turn out to be in the future and give the reader/spectator further stimulation for more ideas based on this concept. To be able to realize the project and get a prototype running, optimized environment settings are used. This means there is only a single string/wire and a copper finger connected to a wire to measure the resistance/distance on the string where the two would touch.
 
 The focus for this proof of concept lies on the electronic hardware and software part so that the type of instrument created with it can vary and is in the hands of the artist.
 
 
 \subsection{Concept}
 
-The slidarr string represents a part of the traditional piano keyboard. Touching and releasing the Slidarr on the string has the same effect as pressing and releasing a piano key. The location is determined by the developed embedded system and sent to a synthesizer where the tone is generated/played. In addition to touching and releasing, it is also possible to slide on the point to the left or right, thus the name `Slidarr`. This has the effect of bending the pitch of the tone and jumping seamlessly to the next key/tone. 
+The slidarr string represents a part of the traditional piano keyboard, as shown in figure \ref{fig:slidarr}. Touching and releasing the Slidarr on the string has the same effect as pressing and releasing a piano key. The location is determined by the developed embedded system and sent to a synthesizer where the tone is generated/played. In addition to touching and releasing, it is also possible to slide on the point to the left or right, thus the name `Slidarr`. This has the effect of bending the pitch of the tone and jumping seamlessly to the next key/tone. 
+
+\begin{figure}[ht]
+  \centering
+  \includegraphics[width=0.8\textwidth]{slidar_illustration}
+  \caption{How the Slidarr maps onto a piano.}
+  \label{fig:slidarr}
+\end{figure}
+
 
 The instrument needs to be calibrated before played to know the minimum and maxiumum resistance range of the wire. After that the calibrated range is mapped to one octave on the keyboard. After starting or resetting, the Slidarr usually starts in the middle of the keyboard which is a C4 with a frequency of \SI{261}{\hertz} up to the next octave.
 
 When sliding while touching the so called slide happens, which changes the frequency of the tone itself and sending pitchbend messages to the synthesizer. After the pitchbend is on the maximum possible the software will turn the tone off and switch to the next tone.
 
 To change the current octave to another location on the keyboard a scroll is possible. While touching the Slidarr, holding down the scroll button and then sliding in a desired direction the `window` of the current frequency range slides to the left or right of the total scale.
-
-\begin{figure}[h]
-  \centering
-  \includegraphics[width=1\textwidth]{slidar_illustration}
-  \caption{How the Slidarr maps onto a piano.}
-  \label{fig:slidarr}
-\end{figure}
 
 To sum it up these are the major functionalities of the Slidarr:
 \begin{itemize}
@@ -61,7 +62,7 @@ To sum it up these are the major functionalities of the Slidarr:
 \section{Analysis}
 The initial idea of the Slidarr was to use a pair of strings and let the user's finger create contact between them, as shown in figure \ref{fig:slidarr_initial_sketch}. This turned out to be easy in theory, but much harder in practice. By measuring the resistance between points A-E and A-C, both the finger's position and its contact resistance can be calculated. But since the resistance in the finger is measured in the \SI{100}{\kilo\ohm}s and the string is only on the the \si{\milli\ohm} scale, it is very hard to get accurate measurements since both values are measured in the same measurement. This is beyond our electronics skills.
 
-\begin{figure}[h]
+\begin{figure}[ht]
   \centering
   \begin{subfigure}[b]{0.45\textwidth}
     \includegraphics[width=\textwidth]{slidar_initial}
@@ -80,7 +81,7 @@ The initial idea of the Slidarr was to use a pair of strings and let the user's 
 
 Instead, a simpler solution is to use a single wire and let the user wear a conductor as shown in figure \ref{fig:slidarr_final_concept}. If the total reisistance of the string is known, the position of the finger can be calculated after measuring the resistance between the finger and one end of the string.
 
-\begin{figure}[h]
+\begin{figure}[ht]
   \centering
   \includegraphics[width=0.5\textwidth]{slidarr_final_concept}
   \caption{Final concept.}
@@ -92,7 +93,7 @@ A copper wire of length 1 meter and diameter of \SI{0.5}{mm} has a resistance of
 
 This can be done in many different ways. One way is using a resistor bridge setup, e.g. a Wheatstone or Kelvin bridge, which is able to sense tiny changes in resistance. However, the bridge needs to be balanced with accurate resistors of similar value of the measured resistor, which is hard to achieve with standard resistors when the measured resistance is this small.
 
-\begin{figure}[h]
+\begin{figure}[ht]
   \centering
   \includegraphics[width=0.5\textwidth]{Kelvin_Connections}
   \caption{4-terminal measurement}
@@ -100,7 +101,7 @@ This can be done in many different ways. One way is using a resistor bridge setu
   \label{fig:4terminal}
 \end{figure}
 
-An more suitable method is to use four-terminal measurement as shown in figure \ref{fig:4terminal}. A known constant currenti $I$ is fed through the resistor with unknown resistance $R$, and the voltage drop $V$ is measured with a separate pair of wires. The resistance can then easily be calculated using Ohms law, $ R = V / I $.
+A more suitable method is to use four-terminal measurement as shown in figure \ref{fig:4terminal}. A known constant currenti $I$ is fed through the resistor with unknown resistance $R$, and the voltage drop $V$ is measured with a separate pair of wires. The resistance can then easily be calculated using Ohms law, $ R = V / I $.
 
 \subsection{Voltage measurement} \label{sec:voltage_measurement}
 Using four-terminal measurement with a current of \SI{100}{\milli\ampere}, the change in voltage per millimeter string is \SI{50}{\micro\volt}. This has now turned into a matter of measuring low-level voltages.
@@ -110,16 +111,16 @@ A 12-bit ADC operating at \SIrange{0}{3.3}{\volt} has a resolution of \SI{0.8}{\
 \subsubsection{Instrumentation amplifier}
 Since we are interested in the voltage difference over the string, a differential amplifier is a good choice for amplifying the signal. The \textit{instrumentation amplifier} is widely used for amplifying low-level signals. It is stable and easy to adjust, since the amplification can be set by a single resistor \cite{in}.
 
-\subsection{The MIDI protocol}
-MIDI (Musical Instrument Digital Interface) protocol is the industry standard for communication between electronic musical instruments and synthesizers \cite{midiorg}. It does not transport the audio itself, instead messages with instructions about the note, its volume and duration are sent to a receiving device which generates the sound. 
+\subsection{The MIDI protocol} \label{sec:midi_protocol}
+The MIDI (Musical Instrument Digital Interface) protocol is the industry standard for communication between electronic musical instruments and synthesizers \cite{midiorg}. It does not transport the audio itself, instead messages with instructions about the note, its volume and duration are sent to a receiving device which generates the sound. 
 
-MIDI was designed to be used with digital piano keyboards. The messages indicate \textit{note on}, \textit{note off}, and their \textit{velocity} (volume). The protocol is built around the concept of piano notes, which is not optimal for the Slidarr since it operates at a continous scale rather than at fixed frequency intervals.
+MIDI was designed to be used with digital piano keyboards. The messages indicate \textit{note on}, \textit{note off}, and their \textit{velocity} (volume). The protocol is built around the concept of piano notes, which is not optimal for the Slidarr which operates at a continous scale rather than at fixed frequency intervals.
 
 The solution to this is the \textit{pitchbend} message, which is usually controlled by a wheel controller on the keyboard. It is a global parameter that bends the pitch (offsets the frequency) of the currently played notes, on synths that support it. The amount of bending is not standardized and can differ between synthesizers.
 
 The MIDI message consists of three bytes: the \textit{command} and two \textit{parameters} \cite{midistanford}. There are many different commands, but the Slidarr only needs the three as shown in table \ref{table:midi_msgs}.
 
-\begin{table}[h]
+\begin{table}[ht]
   \centering
   \caption{MIDI messages}
   \label{table:midi_msgs}
@@ -132,13 +133,12 @@ The MIDI message consists of three bytes: the \textit{command} and two \textit{p
 \end{table}
 
 \subsection{Standard music notations and frequencies}
-An \textit{octave} is a frequency interval where the higher note is twice the frequency of the lower note \cite{octave}. In western music, an octave is divided into 12 \textit{semitones}, named C through B, which correspond to a key on a piano. This is the pattern of keys that repeat over the keyboard as shown in \ref{fig:octave}. A piano usually stretches over seven octaves, numbered 1 through 7. A note needs to be identified by not only its name, but also its octave index, e.g. C4.
+An \textit{octave} is a frequency interval where the higher note is twice the frequency of the lower note \cite{octave}. In western music, an octave is divided into 12 \textit{semitones}, named C through B, which correspond to a key on a piano. This is the pattern of keys that repeat over the keyboard as shown in figure \ref{fig:octave}. A piano usually stretches over seven octaves, numbered 1 through 7. A note needs to be identified by not only its name, but also its octave index, e.g. C4.
 
-\begin{figure}[h]
+\begin{figure}[ht]
   \centering
-  \includegraphics[width=0.5\textwidth]{octaves}
+  \includegraphics[width=0.7\textwidth]{octave}
   \caption{Octaves on a piano}
-  \source{https://music.stackexchange.com/questions/69410/what-is-an-octave}
   \label{fig:octave}
 \end{figure}
 
@@ -165,7 +165,7 @@ $$ I = \frac{1.25}{R_2} $$
 
 For $ I = \SI{100}{\milli\ampere} $, $R_2 = \SI{12.5}{\ohm} $. This resistor also dissipates some power, and a high power resistor is necessary. In the lack of these, 8 parallel \SI{100}{\ohm} \SI{0.25}{\watt} resistors was sufficient.
 
-\begin{figure}[h]
+\begin{figure}[ht]
   \centering
   \includegraphics[width=0.9\textwidth]{slidarr-circuit}
   \caption{Positioning unit}
@@ -189,7 +189,7 @@ Since the op-amps need to be powered with both positive and negative voltage, re
 
 The TS464 is a chip with four integrated op-amps. Figure \ref{fig:slidarr-circuit2} shows how the final circuit is set up using this chip.
 
-\begin{figure}[h]
+\begin{figure}[ht]
   \centering
   \includegraphics[width=0.7\textwidth]{slidarr-circuit2}
   \caption{The positioning unit using a TS464 quad-op-amp.}
@@ -199,7 +199,7 @@ The TS464 is a chip with four integrated op-amps. Figure \ref{fig:slidarr-circui
 \subsection{String sensor}
 The string sensor consists of a \SI{300}{\milli\meter} long copper wire with a diameter of \SI{0.5}{\milli\meter}, stretched between two screws on a wooden plank (see figure \ref{fig:string_sensor}.  The user wears a conductive copper C-shaped ring on one of its fingers, which will be used to make contact with the string. The C-shape makes it possible to bend the ring to a perfect fit for the user. The voltage difference can then be measured between the ring and one end of the string. The string sensor can be though of as a simple potentiometer, marked SLIDARR in figure \ref{fig:slidarr-circuit}.
 
-\begin{figure}[h]
+\begin{figure}[ht]
   \centering
   \includegraphics[width=0.9\textwidth]{string-sensor}
   \caption{The string sensor}
@@ -211,10 +211,9 @@ The micocontroller used is TI EK-TM4C123GXL is the same as TM4C123GH6PM. The sof
 
 \section{Implementation}
 
-\subsection{System overview}
 For the total system to play music in the end, there are four major parts: the circuit/instrument itself, the microcontroller with its peripherals, the connection to the synthesizer/computer and the synthersizer/computer. See image x.
 
-\begin{figure}[h]
+\begin{figure}[ht]
   \centering
   \includegraphics[width=1\textwidth]{BasicSystemOverview.png}
   \caption{slidarr overview}
@@ -244,9 +243,9 @@ The code starts initializing most of the used variables on the stack locally in 
 The state machine runs in an infinite while loop that is controlled by the SysTick timer. The timer can be set at a specified interval given by the defaults. A five milliseconds interval is a good value to use because it gives the processor enough time to do all the calculations and doesn't spam the UART too much while not creating a noticeable delay (respecting the buffer). After the code does all the processing it waits for the SysTick timer to timeout and repeat the process. The waiting is blocking the processor which is intended and doesn't harm the implementation at the current stage.
 
 There are four states the slidarr is in at any given point in time which are IDLE, SLIDE, SCROLL and CALIBRATE. See image x. There are three LEDs which are turned on when entering the states of SLIDE, SCROLL and CALIBRATE to give the user feedback of the devices state which have the colors green, blue, and red respectively.
-The states are influenced by the following properties: string touched flag, string sliding flag, pitchbend maximum offset, calibration button and scrolling button.
+The states are influenced by the following properties: \textit{string touched} flag, \textit{string sliding} flag, \textit{pitchbend maximum offset}, \textit{calibration button} and \textit{scrolling button}.
 
-\begin{figure}[h]
+\begin{figure}[ht]
   \centering
   \includegraphics[width=1\textwidth]{SlidarrStateMachine.png}
   \caption{Slidarr state machine}
@@ -254,19 +253,23 @@ The states are influenced by the following properties: string touched flag, stri
 \end{figure}
 
 \subsection{ADC sample buffering}
-The flags of string touched and string sliding are set by a mean and standard deviation calculated from the last n samples from the ADC. The mean and standard deviation filter the sampled values from noise and keep the slidarr from jumping around too much.
+The flags of \textit{string touched} and \textit{string sliding} are set by a mean and standard deviation calculated from the last n samples from the ADC. The mean and standard deviation filter the sampled values from noise and keep the slidarr from jumping around too much.
 Every read from the ADC is put into a ring buffer of a specified size by the defaults that keeps the history. The size depends on the sample time and noise, but recommended sizes range from 5 to 50 values. Having a large sample time and a big history buffer will result in larger delays and response time.
 
-To set the flags there are treshold values that are compared to the mean and standard deviation to decide the state.
+To set the flags there are threshold values that are compared to the mean and standard deviation to decide the state.
 
 \subsection{Calibration}
-The strings needs to be calibrated to find out at what voltage the string starts and where it ends. To start the calibration the calibration button is pressed without releasing it. Only when both the button and the string is touched will the calibration start. After the string is touch the button can be released. Sliding from the minimum to the maximum or vice versa will find the string base value (min) and the string octave span (min - max). Removing the contact from the string ends the calibration. The area that was slid over represents one octave afterwards.
+The strings needs to be calibrated to find out at what voltage the string starts and where it ends. To start the calibration the calibration button is pressed without releasing it. Only when both the button and the string is touched will the calibration start. After the string is touch the button can be released. Sliding from the minimum to the maximum or vice versa will find the string base value (min) and the octave span (min - max) (refer to figure \ref{fig:slidarr}). Removing the contact from the string ends the calibration. The range that was slid over will now represent the octave C4 to C5.
 
 \subsection{Scrolling}
 While sliding it is possible to change the current octave to a higher or lower one by scrolling. When the scroll button is pressed while sliding it will change the base frequency to a higher or lower depending on the sliding direction.
 
-\subsection{Making MIDI continuous / bitchbending}
-To play a tone with MIDI every note has to be turned on and off manually. In addition to just playing the note it has a frequency offset that is sent by a pitchbend message. To get the sliding effect a note needs to be turned on and depending on the location the offset will need to be set. When sliding this offset changes and has to be continously transmitted. Sliding over to a another note (passing the maximum pitchbend), the old note has to be turned off and the new note be turned on, sending the offset from the point of view of the new note.
+\subsection{Generating continuous sound}
+As mentioned in secion \ref{sec:midi_protocol}, MIDI transmit fixed notes and not the actual frequency values. When touching the string, it is unlikely to hit at a perfect MIDI frequency. In order to be able to slide the frequency up or down continuously, the Slidarr calculates how much the touch position deviates from the actual MIDI note, and uses that value to send a \textit{pitchbend} message. 
+
+The pitchbend is implemented in the synth and adjusts the global frequency of the sound, but usually only stretches $\pm$2 semitones. The configuration of the Slidarr needs to match the settings of the synth. Whenever the pitchbend value reaches the maximum, the Slidarr will automatically turn of the note, reset the pitchbend and turn of the next note. This way, any tone can be played on the Slidarr.
+
+However, the switch between notes often causes a glitch in the sound from the synth. This can be avoided by choosing a smooth sound, or increase the pitchbend range on both the synth and the Slidarr. As for now, this range is can only be changed from the source code.
 
 \subsection{Wireless connection}
 In this project, a Bluetooth module HC-05 is used as a second transmitting device together with USB-TTL device, the advantage of using a wireless connection other than moving the microcontroller around freely within the area of the network, it gives the ability to test the output signal on different software. Also, these two ways of transmitting the MIDI message improved the testing process. 
@@ -292,44 +295,29 @@ The Slidarr has been developed in a modular approach, adding the functionalities
 
 Using the debugger to view the memory during faulty behaviour was enough to find the bugs and misbehaviour. Instead of using the whole Slidarr hardware (string, circuit, power supply, etc) to test the software, a simple potentiometer with a button connected to the ADC, similar behaviour could be simulated.
 
-Due to the instrument not being used in a safety critical system there is no further need for more advanced testing and verification at this stage of the project.
-
-\section{How to use (for powerpoint and demo, remove this later on)}
--how to connect
--make simple tone
--make calibration
--bend pitch
--scroll
-
 \section{Results}
 
 \subsection{Conclusion}
 Being a prototype, the Slidarr is a viable instrument very capable of creating music in the hands of an artist.
 
-In conclusion, this project shows that a MIDI signal generated from the string is indeed very possible.
-The project works pretty well, and it's ready to test it on a real guitar or any musical instruments. However, the end result was quite satisfactory as it transmits MIDI note from the string to synthesizer software.
+To conclude, this project shows that a MIDI signal generated from the string is possible.
+The Slidarr works well, but has some glitches and bugs which need to be fixed in order to make it easier to play. However, the end result was quite satisfactory as it transmits MIDI note from the string to synthesizer software.
 
 \subsection{Open source}
 All code that was developed during this project is made available at GitHub: \texttt{https://github.com/Deffendor/slidar}
 
 \subsection{Future improvements and implementations}
-As the Slidarr proved to be successful, many things can now be done to make Slidarr more accessible to the public and make it a popular instrument one day. These improvements are both on the hardware side and software side.
+As the Slidarr proved to be successful, many things can now be done to make Slidarr more accessible to the public and make it a mainstream instrument. These improvements are both on the hardware side and software side.
 
-The code can be made more modular for use on other microcontrollers, for example by converting it to use CMSIS. A more optimal and cost effective microcontroller can be choosen. The current program uses 12KB (out of 256KB) of flash storage and 500 bytes (out of 32KB) of SRAM. In addition the software runs without any problems at 16MHz. This means a much smaller microcontroller could be used for future implementations.
+The code can be made more modular for use on other microcontrollers, for Slidarr by converting it to use CMSIS. A more optimal and cost effective microcontroller can be choosen. The current program uses 12KB (out of 256KB) of flash storage and 500 bytes (out of 32KB) of SRAM. In addition the software runs without any problems at 16MHz. This means a much smaller microcontroller could be used for future implementations.
 
 Along with choosing a smaller microcontroller a more visually appealing, compact, and battery powered device can be construted. Using higher precision ADCs and other materials that have other eletric conductivity properties to measure the distance can be researched for use in different instrument variations.
 
-The use of multiple strings controlling e.g. the velocity and volume can be implemented. The type of instrument that can be created after this point is only limited by the imagination of the reader blabla
-
-picture with concepts
-
----
-
-Another way to expand the system is by adding extra more strings controlling on the system, for instance: a string to control the MIDI note that corresponds to velocity and volume can be implemented,  by adding new string this will give the ability to control better the MIDI note and variety of sound could be generated. 
+Another way to expand the system is by adding more strings to the system, for instance: a string to control the MIDI note that corresponds to velocity and volume can be implemented in order to add another dimension to the music.
 
 In addition, by powering the microcontroller with the battery will make the project a fully portable device. And by adding a relay aim to reduce the battery power consumption by implementing a sleep mode e.g. if the string is not touched for a certain period of time it goes to turn off state and turned back to on state if the string is touch. This would lead to an increase in the standby lifetime of the power source.
 
-Although the hardware implementation of the project design is completed just extra things that could improve the received signal. Therefore we could move from breadboard to PCB prototype, also come up with a 3D printing enclosure for it as well.
+The hardware could be improved in many ways. The positioning unit is heavily dependent on a clean and reliable power supply, and too sensitive to be powered from a transformer. The electronic components should also be soldered onto a dedicated PCB, in order to remove all the contact issues that the breadboad suffers from.
 
 \newpage
 \begin{thebibliography}{9}
