@@ -8,9 +8,10 @@
 #include "uart.h"
 #include <math.h>
 #include <stdint.h>
+#include "defaults.h"
 
 void noteOn(int note, int velocity){
-    char command = 0x90;
+    char command = 0x90 +  + MIDI_CHANNEL - 1;
     char parameterKey = (char)note;
     char parameterVelocity = (char)velocity;
 
@@ -21,7 +22,7 @@ void noteOn(int note, int velocity){
     UART4Tx(parameterKey);
     UART4Tx(parameterVelocity);
 
-    uint8_t blu_command = 144;  //144 Decimal same as 0x90 HEX
+    uint8_t blu_command = 144 + MIDI_CHANNEL - 1;  //144 Decimal same as 0x90 HEX
     uint8_t blu_note = note;
     uint8_t blu_velocity = velocity;    //or 127
 
@@ -31,7 +32,7 @@ void noteOn(int note, int velocity){
 }
 
 void noteOff(int note, int velocity){
-    char command = 0x80;
+    char command = 0x80 + MIDI_CHANNEL - 1;
     char parameterKey = (char)note;
     char parameterVelocity = (char)velocity;
 
@@ -39,7 +40,7 @@ void noteOff(int note, int velocity){
     UART4Tx(parameterKey);
     UART4Tx(parameterVelocity);
 
-    uint8_t blu_command = 128;  //128 Decimal same as 0x80 HEX
+    uint8_t blu_command = 128 + MIDI_CHANNEL - 1;  //128 Decimal same as 0x80 HEX
     uint8_t blu_note = note;
     uint8_t blu_velocity = velocity;    //or 127
 
@@ -57,7 +58,7 @@ void pitchbend(int value){
     else if (value < 0)
         value = 0;
 
-    char command = 0xE0;
+    char command = 0xE0 + MIDI_CHANNEL - 1;
     int lsbValue = value & 0x7F;
     int msbValue = value & 0x3F80;
     msbValue = msbValue >> 7;
@@ -68,7 +69,7 @@ void pitchbend(int value){
     UART4Tx(parameterLsb);
     UART4Tx(parameterMsb);
 
-    uint8_t blu_command = 224;  //224 Decimal same as 0xE0 HEX
+    uint8_t blu_command = 224 + MIDI_CHANNEL - 1;  //224 Decimal same as 0xE0 HEX
     uint8_t blu_parameterLsb = lsbValue;
     uint8_t blu_parameterMsb = msbValue;
 

@@ -64,8 +64,10 @@ void initUART(int baudRate) {
     UART5_CTL_R = UART5_CTL_R & ~UART_CTL_UARTEN; // Enable UART5
 
     if(baudRate == 9600){
-        UART5_IBRD_R = 104;
-        UART5_FBRD_R = 11;
+        //UART5_IBRD_R = 104;
+        //UART5_FBRD_R = 11;
+        UART5_IBRD_R = 8;
+        UART5_FBRD_R = 44;
     } else if (baudRate == 38400){
         UART5_IBRD_R = 26;
         UART5_FBRD_R = 3;

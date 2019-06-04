@@ -77,10 +77,10 @@ int main(void)
     btn2 = 0;
     int new_octave_span;                                    // helper variable for calibration
 
+    initUART(BAUD_RATE);
     initButtons();
     initLEDs();
     initADC();
-    initUART(BAUD_RATE);
     initHistory(string_history, STRING_HISTORY_SIZE);
     initSysTickTimer(STRING_SAMPLING_DELAY * 1000); // in microseconds
 
