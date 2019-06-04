@@ -208,7 +208,7 @@ The string sensor consists of a \SI{300}{\milli\meter} long copper wire with a d
 
 \section{Implementation}
 
-For the total system to play music in the end, there are four major parts: the circuit/instrument itself, the microcontroller with its peripherals, the connection to the synthesizer/computer and the synthersizer/computer. See image x.
+For the total system to play music in the end, there are four major parts: the circuit/instrument itself, the microcontroller with its peripherals, the connection to the synthesizer/computer and the synthersizer/computer. See figure~\ref{fig:slidarr overview}.
 
 \begin{figure}[ht]
   \centering
@@ -239,7 +239,7 @@ The code starts initializing most of the used variables on the stack locally in 
 
 The state machine runs in an infinite while loop that is controlled by the SysTick timer. The timer can be set at a specified interval given by the defaults. A five milliseconds interval is a good value to use because it gives the processor enough time to do all the calculations and doesn't spam the UART too much while not creating a noticeable delay (respecting the buffer). After the code does all the processing it waits for the SysTick timer to timeout and repeat the process. The waiting is blocking the processor which is intended and doesn't harm the implementation at the current stage.
 
-There are four states the Slidarr is in at any given point in time which are IDLE, SLIDE, SCROLL and CALIBRATE. See image x. There are three LEDs which are turned on when entering the states of SLIDE, SCROLL and CALIBRATE to give the user feedback of the devices state which have the colors green, blue, and red respectively.
+There are four states the Slidarr is in at any given point in time which are IDLE, SLIDE, SCROLL and CALIBRATE. See figure~\ref{fig:slidarr state machine}. There are three LEDs which are turned on when entering the states of SLIDE, SCROLL and CALIBRATE to give the user feedback of the devices state which have the colors green, blue, and red respectively.
 The states are influenced by the following properties: \textit{string touched} flag, \textit{string sliding} flag, \textit{pitchbend maximum offset}, \textit{calibration button} and \textit{scrolling button}.
 
 \begin{figure}[ht]
